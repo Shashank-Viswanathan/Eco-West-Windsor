@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits | West Windsor Ecosystem</title>
+    <style>
+        :root {
+            --primary-green: #2c5f2d;
+            --secondary-green: #4CAF50;
+            --light-green: #e8f5e9;
+            --dark-text: #333;
+            --light-text: #f5f5f5;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: #f9f9f9;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background-color: var(--primary-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .nav-logo {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin-left: 1.2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--light-green);
+        }
+        
+        /* Credits Hero */
+        .credits-hero {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), 
+                rgba(0, 0, 0, 0.5)), 
+                url('https://images.unsplash.com/photo-1458966480358-a0ac42de0a7a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .credits-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Credits Content */
+        .credits-container {
+            max-width: 900px;
+            margin: -50px auto 0;
+            padding: 0 2rem 4rem;
+        }
+        
+        .credits-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-green);
+        }
+        
+        /* AI Notice Section */
+        .ai-notice {
+            background-color: #e8f5e9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .policy-button {
+            display: inline-block;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-green);
+        }
+        
+        .policy-button:hover {
+            background: transparent;
+            color: var(--primary-green);
+        }
+        
+        /* Role Sections */
+        .role-section {
+            margin-bottom: 3rem;
+        }
+        
+        .role-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .role-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+        
+        .contributors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .contributor-card {
+            background: var(--light-green);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .contributor-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .contributor-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-green);
+        }
+        
+        .contributor-role {
+            font-size: 0.9rem;
+            color: var(--dark-text);
+        }
+        
+        .contributor-count {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-green);
+            margin-top: 1rem;
+        }
+        
+        .cta-button:hover {
+            background: transparent;
+            color: var(--primary-green);
+        }
+        
+        footer {
+            background: var(--primary-green);
+            color: var(--light-text);
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .credits-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .credits-card {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-menu li {
+                margin: 0.5rem;
+            }
+            
+            .contributors-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">West Windsor Ecosystem</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="join.html">Join</a></li>
+                <li><a href="buy-donate.html">Buy/Donate</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="credits.html">Credits</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="credits-hero">
+        <div>
+            <h1>Our Contributors</h1>
+            <p>Recognizing the community members who make this possible</p>
+        </div>
+    </section>
+    
+    <!-- Credits Content -->
+    <div class="credits-container">
+        <div class="credits-card">
+            <h2>Project Credits</h2>
+            <p>West Windsor Ecosystem is made possible by the dedication of our community members.</p>
+            
+            <!-- AI Notice Section -->
+            <div class="ai-notice">
+                <h3>Technology Notice</h3>
+                <p>This website was built using AI assistance, but all content is human-created and verified by our team.</p>
+                <a href="https://docs.google.com/document/d/1PfzjfOAv8hTr2sf5ndGLujPPgoPffkM6WD6VogM182Q/edit?tab=t.0" class="policy-button" target="_blank">AI Usage Policy</a>
+            </div>
+            
+            <!-- Members Section -->
+            <div class="role-section">
+                <div class="role-title">
+                    <div class="role-icon">M</div>
+                    <h3>Members</h3>
+                </div>
+                <p>Certified members who have submitted species observations and contributed to our growing database.</p>
+                
+                <div class="contributors-grid">
+                    <!-- Members will be listed here as they join -->
+                </div>
+            </div>
+            
+            <!-- Verifiers Section -->
+            <div class="role-section">
+                <div class="role-title">
+                    <div class="role-icon">V</div>
+                    <h3>Verifiers</h3>
+                </div>
+                <p>Our expert reviewers who ensure the accuracy of all species submissions before publication.</p>
+                
+                <div class="contributors-grid">
+                    <div class="contributor-card">
+                        <div class="contributor-name">Shashank Viswanathan</div>
+                        <div class="contributor-role">Owner</div>
+                        <div class="contributor-count">0 contributions</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 3rem;">Interested in joining our list of contributors? <a href="join.html">Learn how to get involved</a>.</p>
+            <a href="join.html" class="cta-button">Become a Contributor</a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 West Windsor Ecosystem Initiative. All rights reserved. Contact us at ecowestwindsor@gmail.com</p>
+    </footer>
+</body>
+</html>

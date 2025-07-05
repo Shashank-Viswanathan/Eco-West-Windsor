@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn | West Windsor Ecosystem</title>
+    <style>
+        :root {
+            --primary-green: #2c5f2d;
+            --secondary-green: #4CAF50;
+            --light-green: #e8f5e9;
+            --dark-text: #333;
+            --light-text: #f5f5f5;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: #f9f9f9;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background-color: var(--primary-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .nav-logo {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin-left: 1.2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--light-green);
+        }
+        
+        /* Learn Hero */
+        .learn-hero {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), 
+                rgba(0, 0, 0, 0.5)), 
+                url('https://images.unsplash.com/photo-1452570053594-1b985d6ea890?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .learn-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Learn Content */
+        .learn-container {
+            max-width: 1200px;
+            margin: -50px auto 0;
+            padding: 0 2rem 4rem;
+        }
+        
+        .learn-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-green);
+        }
+        
+        /* Search Sections */
+        .search-section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .search-description {
+            margin-bottom: 1rem;
+            font-style: italic;
+            color: #555;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box:focus {
+            border-color: var(--secondary-green);
+        }
+        
+        .doc-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .doc-card {
+            background: var(--light-green);
+            padding: 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .doc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .doc-card h3 {
+            color: var(--primary-green);
+            margin-top: 0;
+        }
+        
+        /* Document Viewer */
+        .doc-viewer {
+            margin-top: 3rem;
+            display: none;
+        }
+        
+        .doc-viewer iframe {
+            width: 100%;
+            height: 70vh;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        footer {
+            background: var(--primary-green);
+            color: var(--light-text);
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .learn-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .learn-card {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .doc-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">West Windsor Ecosystem</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="join.html">Join</a></li>
+                <li><a href="buy-donate.html">Buy/Donate</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="credits.html">Credits</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="learn-hero">
+        <div>
+            <h1>Species Database</h1>
+            <p>Explore detailed information about local flora and fauna</p>
+        </div>
+    </section>
+    
+    <!-- Learn Content -->
+    <div class="learn-container">
+        <div class="learn-card">
+            <!-- Species Search Section -->
+            <div class="search-section">
+                <h2>Search Species</h2>
+                <p class="search-description">Find detailed information about specific species in our ecosystem</p>
+                <input type="text" class="search-box" placeholder="Search by species name..." id="speciesSearchInput">
+                
+                <div class="doc-list" id="speciesDocList">
+                    <!-- Species documents will be populated here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Biology Concepts Search Section -->
+            <div class="search-section">
+                <h2>Biology Concepts</h2>
+                <p class="search-description">Learn about biological concepts commonly used in our articles</p>
+                <input type="text" class="search-box" placeholder="Search biology concepts..." id="conceptsSearchInput">
+                
+                <div class="doc-list" id="conceptsDocList">
+                    <!-- Biology concept documents will be populated here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Document Viewer -->
+            <div class="doc-viewer" id="docViewer">
+                <button class="back-button" id="backButton">← Back to List</button>
+                <iframe id="docFrame" src=""></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 West Windsor Ecosystem Initiative. All rights reserved. Contact us at ecowestwindsor@gmail.com</p>
+    </footer>
+
+    <script>
+        // Document databases
+        const speciesDocuments = [
+            {
+                id: "1hxsuOHSs6m4PbAjbVoaHoMC2jCm1FIspNVAi94majGM",
+                title: "Asian Lady Beetle",
+                description: "This ladybug is a commonly found, \"indoor pest\" during the winter.",
+                tags: ["Ladybug", "Harmonia Axyridis", "common"]
+            }
+        ];
+
+        const conceptsDocuments = [
+            {
+                id: "1GkDqmy40npcFznf5c1TebhWF29-q6EssZkqvKrvopsc",
+                title: "Taxonomy",
+                description: "Identifying, naming, and classifying species into a hierarchical structure based on shared traits and genetic relationships",
+                tags: ["Taxonomy", "Naming", "Biology"]
+            },
+            {
+                id: "1qbfp99-WF5ba9Rk1uXePcJqyv8yHv3B9_lmy9bPmylk",
+                title: "Response to Environmental Threats and Changes",
+                description: "How Organisms Respond to Changing Times",
+                tags: ["Enviornment", "Threat", "Endangered"]
+            },
+            {
+                id: "1c6jTUTRe8dUy9dnnQjnqlSdGh8tGUjZuqumkcjClTxk",
+                title: "Immune and Defense Mechanisms",
+                description: "How Organisms Protect Themselves Against Hazards",
+                tags: ["Defense", "Immune", "Sickness"]
+            },
+            {
+                id: "13y9cf09JKv6czirVglIJmLEd1Gzj9jaih3du12E-NBw",
+                title: "Physiology and Homeostasis",
+                description: "Study of Internal Functions and Balance in Living Organisms",
+                tags: ["Physiology", "Homeostasis", "Biological Balance"]
+            },
+            {
+                id: "11iYnUJEcvvXRCSSsecNa0HQZkpisvwAH-WKKdaoEGOI",
+                title: "Diet, Feeding Mode, Reproductive Biology",
+                description: "Nutritional Patterns, Feeding Strategies, and Reproductive Systems",
+                tags: ["Nutrition", "Feeding Behavior", "Reproduction"]
+            },
+            {
+                id: "170uLv7MFTh65U_zUDWYmxXjRNehhLoVsr4ncbnD8wGk",
+                title: "Molecular and Cellular Biology",
+                description: "Fundamental Biological Processes at Molecular and Cellular Levels",
+                tags: ["Molecular Biology", "Cell Biology", "Cellular Processes"]
+            },
+            {
+                id: "1NfdDM9Wz7TaqPQxsFd_VXoj30cIGOdTJeBEHj-5-ZqE",
+                title: "Ecological Profile",
+                description: "Characteristics and Interactions Within Ecosystems",
+                tags: ["Ecology", "Ecosystems", "Environmental Interactions"]
+            },
+            {
+                id: "19ZU5rbtqbCUI3B04EIW6pNByq_crJx_PPONjraYm17A",
+                title: "Life Cycle, Development, and Reproduction",
+                description: "Growth Stages and Reproductive Strategies Across Species",
+                tags: ["Life Cycle", "Development", "Reproductive Biology"]
+            },
+            {
+                id: "1ZiXyl7y6_U8whc7Pj9swet1bNWtn-XVK3IeBO_cgsH4",
+                title: "Behavior, Phenology, and Seasonal Activity",
+                description: "Organism Behavior Patterns and Seasonal Biological Events",
+                tags: ["Animal Behavior", "Phenology", "Seasonal Patterns"]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const speciesSearchInput = document.getElementById('speciesSearchInput');
+            const conceptsSearchInput = document.getElementById('conceptsSearchInput');
+            const speciesDocList = document.getElementById('speciesDocList');
+            const conceptsDocList = document.getElementById('conceptsDocList');
+            const docViewer = document.getElementById('docViewer');
+            const docFrame = document.getElementById('docFrame');
+            const backButton = document.getElementById('backButton');
+
+            // Display functions
+            function displayDocuments(docs, container) {
+                container.innerHTML = '';
+                
+                if (!docs || docs.length === 0) {
+                    container.innerHTML = '<p>No documents found matching your search.</p>';
+                    return;
+                }
+                
+                docs.forEach(doc => {
+                    const docCard = document.createElement('div');
+                    docCard.className = 'doc-card';
+                    docCard.innerHTML = `
+                        <h3>${doc.title}</h3>
+                        <p>${doc.description}</p>
+                        <div class="tags">${doc.tags ? doc.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ') : ''}</div>
+                    `;
+                    
+                    docCard.addEventListener('click', function() {
+                        showDocument(doc.id);
+                    });
+                    
+                    container.appendChild(docCard);
+                });
+            }
+
+            function showDocument(docId) {
+                if (!docId) return;
+                docFrame.src = `https://docs.google.com/document/d/${docId}/preview?embedded=true`;
+                speciesDocList.style.display = 'none';
+                conceptsDocList.style.display = 'none';
+                docViewer.style.display = 'block';
+            }
+
+            // Event listeners
+            speciesSearchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredDocs = speciesDocuments.filter(doc => 
+                    doc.title.toLowerCase().includes(searchTerm) || 
+                    doc.description.toLowerCase().includes(searchTerm) ||
+                    (doc.tags && doc.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
+                );
+                displayDocuments(filteredDocs, speciesDocList);
+            });
+
+            conceptsSearchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredDocs = conceptsDocuments.filter(doc => 
+                    doc.title.toLowerCase().includes(searchTerm) || 
+                    doc.description.toLowerCase().includes(searchTerm) ||
+                    (doc.tags && doc.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
+                );
+                displayDocuments(filteredDocs, conceptsDocList);
+            });
+
+            backButton.addEventListener('click', function() {
+                docViewer.style.display = 'none';
+                speciesDocList.style.display = 'grid';
+                conceptsDocList.style.display = 'grid';
+            });
+
+            // Initial display
+            displayDocuments(speciesDocuments, speciesDocList);
+            displayDocuments(conceptsDocuments, conceptsDocList);
+        });
+    </script>
+</body>
+</html>

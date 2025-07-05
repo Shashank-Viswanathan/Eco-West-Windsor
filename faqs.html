@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs | West Windsor Ecosystem</title>
+    <style>
+        :root {
+            --primary-green: #2c5f2d;
+            --secondary-green: #4CAF50;
+            --light-green: #e8f5e9;
+            --dark-text: #333;
+            --light-text: #f5f5f5;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: #f9f9f9;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background-color: var(--primary-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .nav-logo {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin-left: 1.2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--light-green);
+        }
+        
+        /* FAQ Hero */
+        .faq-hero {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), 
+                rgba(0, 0, 0, 0.5)), 
+                url('https://images.unsplash.com/photo-1452570053594-1b985d6ea890?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .faq-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* FAQ Content */
+        .faq-container {
+            max-width: 900px;
+            margin: -50px auto 0;
+            padding: 0 2rem 4rem;
+        }
+        
+        .faq-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-green);
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.5rem;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+        }
+        
+        .faq-question.active::after {
+            content: '-';
+        }
+        
+        .faq-answer {
+            display: none;
+            padding-top: 0.5rem;
+        }
+        
+        .faq-answer.show {
+            display: block;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-green);
+            margin-top: 1rem;
+        }
+        
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--primary-green);
+        }
+        
+        .cta-button.secondary:hover {
+            background: var(--primary-green);
+            color: white;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        footer {
+            background: var(--primary-green);
+            color: var(--light-text);
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .faq-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .faq-card {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-menu li {
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">West Windsor Ecosystem</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="join.html">Join</a></li>
+                <li><a href="buy-donate.html">Buy/Donate</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="credits.html">Credits</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="faq-hero">
+        <div>
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers about our local ecosystem initiatives</p>
+        </div>
+    </section>
+    
+    <!-- FAQ Content -->
+    <div class="faq-container">
+        <div class="faq-card">
+            <h2>Common Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">What species are included in your database?</div>
+                <div class="faq-answer">
+                    <p>Our goal is to document <strong>all species in West Windsor</strong>. Currently, you can view all researched species on our <a href="learn.html">Learn page</a>. We're constantly adding more through community contributions and scientific research.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How can I contribute species observations?</div>
+                <div class="faq-answer">
+                    <p>Both members and volunteers can submit observations through our <a href="join.html">Join</a> page. <strong>All submissions require review</strong> before being published to ensure accuracy. Certified members have additional privileges after approval - see our <a href="join.html">Join page</a> for details.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What's the review process for submissions?</div>
+                <div class="faq-answer">
+                    <p>All observations (from both members and volunteers) are reviewed by our science team within 7-10 days. We verify species identification, location accuracy, and data quality. You'll receive notification when your submission is approved or if we need more information.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How often is new species data added?</div>
+                <div class="faq-answer">
+                    <p>We add new species <strong>weekly</strong> as they're researched and verified. Seasonal changes and environmental impact reports are updated quarterly. Subscribe to our newsletter for updates on new additions.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I access unpublished species data?</div>
+                <div class="faq-answer">
+                    <p>Currently researching species are only visible to our science team until fully verified. Once confirmed, they immediately appear on the <a href="learn.html">Learn page</a>. Certified members may request preview access for ongoing studies.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How accurate are the species locations?</div>
+                <div class="faq-answer">
+                    <p>We maintain <strong>precise location data</strong> for conservation purposes, but publicly display generalized areas to protect sensitive habitats. Researchers can request specific coordinates through our contact form.</p>
+                </div>
+            </div>
+            
+            <h2 style="margin-top: 3rem;">Still have questions?</h2>
+            <p>Contact our research team at <a href="mailto:ecowestwindsor@gmail.com">ecowestwindsor@gmail.com</a> for species-specific inquiries.</p>
+            
+            <div class="button-group">
+                <a href="learn.html" class="cta-button">Browse Species</a>
+                <a href="join.html" class="cta-button secondary">Contribute Observations</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 West Windsor Ecosystem Initiative. All rights reserved. Contact us as ecowestwindsor@gmail.com</p>
+    </footer>
+
+    <script>
+        // Simple FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                question.classList.toggle('active');
+                const answer = question.nextElementSibling;
+                answer.classList.toggle('show');
+            });
+        });
+    </script>
+</body>
+</html>

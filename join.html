@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Us | West Windsor Ecosystem</title>
+    <style>
+        :root {
+            --primary-green: #2c5f2d;
+            --secondary-green: #4CAF50;
+            --light-green: #e8f5e9;
+            --dark-text: #333;
+            --light-text: #f5f5f5;
+            --accent-orange: #FF8C42;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: #f9f9f9;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background-color: var(--primary-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .nav-logo {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin-left: 1.2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--light-green);
+        }
+        
+        /* Join Page Content */
+        .join-hero {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), 
+                rgba(0, 0, 0, 0.5)), 
+                url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .join-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .join-container {
+            max-width: 900px;
+            margin: -50px auto 0;
+            padding: 0 2rem 4rem;
+        }
+        
+        .join-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-green);
+        }
+        
+        h3 {
+            color: var(--primary-green);
+            margin-top: 2.5rem;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2.5rem 0;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 1.2rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-table td {
+            padding: 1.2rem;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: var(--light-green);
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #f1f8e9;
+        }
+        
+        .checkmark {
+            color: var(--secondary-green);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .x-mark {
+            color: #e53935;
+            font-weight: bold;
+        }
+        
+        .feature-name {
+            font-weight: 600;
+            text-align: left;
+            padding-left: 1.5rem;
+        }
+        
+        .membership-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .member-badge {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .volunteer-badge {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .requirements-list {
+            background-color: var(--light-green);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .requirements-list ol {
+            padding-left: 1.5rem;
+        }
+        
+        .requirements-list li {
+            margin-bottom: 1.5rem;
+        }
+        
+        .requirements-list h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-green);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-green);
+            margin-top: 1rem;
+        }
+        
+        .cta-button:hover {
+            background: transparent;
+            color: var(--primary-green);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        /* New styles for article requirements */
+        .article-requirements {
+            margin: 3rem 0;
+        }
+        
+        .requirement-category {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--secondary-green);
+        }
+        
+        .requirement-category h3 {
+            margin-top: 0;
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+        }
+        
+        .requirement-category h3::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-color: var(--secondary-green);
+            border-radius: 50%;
+            margin-right: 12px;
+            color: white;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+        }
+        
+        .requirement-item {
+            padding: 0.5rem 0;
+            margin-left: 36px;
+            position: relative;
+        }
+        
+        .requirement-item::before {
+            content: '•';
+            color: var(--secondary-green);
+            font-weight: bold;
+            position: absolute;
+            left: -20px;
+        }
+        
+        .photo-requirements {
+            background-color: #f0f7ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 4px solid #1565c0;
+        }
+        
+        .email-button {
+            display: inline-block;
+            background: var(--accent-orange);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .email-button:hover {
+            background: #e67e22;
+        }
+        
+        /* Video Walkthrough Section */
+        .video-walkthrough {
+            background-color: #f5f9f5;
+            padding: 2.5rem;
+            border-radius: 8px;
+            margin: 3rem 0;
+            border-left: 4px solid var(--accent-orange);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        footer {
+            background: var(--primary-green);
+            color: var(--light-text);
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .join-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .join-card {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .comparison-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .requirement-category h3::before {
+                width: 20px;
+                height: 20px;
+                margin-right: 8px;
+            }
+            
+            .requirement-item {
+                margin-left: 28px;
+            }
+            
+            .video-walkthrough {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">West Windsor Ecosystem</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="join.html">Join</a></li>
+                <li><a href="buy-donate.html">Buy/Donate</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="credits.html">Credits</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="join-hero">
+        <div>
+            <h1>Join Our Community</h1>
+            <p>Choose how you'd like to contribute to our ecosystem</p>
+        </div>
+    </section>
+    
+    <!-- Join Form Section -->
+    <div class="join-container">
+        <div class="join-card">
+            <h2>Participation Options</h2>
+            <p>We offer two ways to get involved with the West Windsor Ecosystem initiative. Whether you're looking for a more committed role or want to contribute casually, we have options to suit your level of involvement. All participation is completely free.</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Features</th>
+                        <th>
+                            <span class="membership-badge member-badge">Certified Member</span>
+                        </th>
+                        <th>
+                            <span class="membership-badge volunteer-badge">Volunteer</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature-name">Submit articles for review</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Public profile with statistics</td>
+                        <td class="checkmark">✓</td>
+                        <td class="x-mark">✗</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Earn achievement certificates</td>
+                        <td class="checkmark">✓</td>
+                        <td class="x-mark">✗</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Track article contributions</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Option to remain anonymous</td>
+                        <td class="checkmark">✓</td>
+                        <td class="checkmark">✓</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Requires application approval</td>
+                        <td class="checkmark">✓</td>
+                        <td class="x-mark">✗</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Participation cost</td>
+                        <td>Free</td>
+                        <td>Free</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>Certified Members go through an application process to help maintain the quality of our community. Volunteers can participate immediately with no approval needed. Both roles are equally valued in our mission to protect local biodiversity.</p>
+            
+            <div class="button-group">
+                <a href="https://docs.google.com/forms/d/1ho8YSUiDulxMLdIIg2C2wesqLmUgLJUtqN6jANTJyaw/edit" class="cta-button">Become a Certified Member</a>
+                <a href="https://docs.google.com/forms/d/1ho8YSUiDulxMLdIIg2C2wesqLmUgLJUtqN6jANTJyaw/edit" class="cta-button secondary">Register as Volunteer</a>
+            </div>
+
+            <!-- Video Walkthrough Section -->
+            <div class="video-walkthrough">
+                <h2>Article Creation Walkthrough</h2>
+                <p>Watch this detailed video guide on how to create and publish your articles according to our guidelines. The walkthrough demonstrates:</p>
+                <ul>
+                    <li>The complete process of researching and writing an article</li>
+                    <li>How to ensure your content meets our quality standards</li>
+                    <li>Proper citation methods and ethical research practices</li>
+                    <li>How to comply with our AI usage agreement</li>
+                    <li>Tips for making your article scientifically accurate and engaging</li>
+                </ul>
+                
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/Tf5Wk_kuXnU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                
+                <p>This video shows my personal process for creating articles that meet all the requirements while maintaining scientific integrity. Follow these methods to ensure your submission has the best chance of approval.</p>
+            </div>
+
+            <h2>Membership Application Prompt</h2>
+            <p>To become a Certified Member, please complete the following prompt in your application:</p>
+
+            <div class="requirements-list">
+                <h3>Write a comprehensive article about:</h3>
+                <ul>
+                    <li><strong>A species not currently covered on our site</strong> (preferred - this will give you a higher chance of acceptance)</li>
+                    <li><strong>OR</strong> significantly improve an existing article (must demonstrate substantial additions and improvements)</li>
+                </ul>
+                <p>If improving an existing article, clearly explain what changes you made and how they enhance the original content.</p>
+                <p>Your submission will be evaluated based on:</p>
+                <ul>
+                    <li>Scientific accuracy and depth of research</li>
+                    <li>Quality of writing and organization</li>
+                    <li>Completeness of information</li>
+                    <li>Proper citation of sources</li>
+                </ul>
+            </div>
+
+            <div class="article-requirements">
+                <h2>Full Species Article Requirements</h2>
+                <p>Each article must be well-researched, use accurate scientific terminology, and demonstrate clear connections to ecological and biological principles. Cite all scientific sources used.</p>
+                
+                <div class="requirement-category">
+                    <h3>1. Taxonomy and Evolutionary History</h3>
+                    <div class="requirement-item">Scientific name (binomial), common name</div>
+                    <div class="requirement-item">Full classification: Kingdom to Species</div>
+                    <div class="requirement-item">Closest relatives and notable evolutionary traits</div>
+                    <div class="requirement-item">Fossil evidence (if applicable)</div>
+                    <div class="requirement-item">Major evolutionary adaptations (e.g., flight, thermoregulation, mimicry)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>2. Native Range, Introduction History, and Urban Distribution</h3>
+                    <div class="requirement-item">Is the species native or introduced to your region?</div>
+                    <div class="requirement-item">How and when was it introduced (if applicable)?</div>
+                    <div class="requirement-item">Natural geographic range</div>
+                    <div class="requirement-item">Where it's typically found in your city (parks, wetlands, streets, etc.)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>3. Habitat, Ecological Niche, and Environmental Role</h3>
+                    <div class="requirement-item">Preferred environments (e.g., aquatic, canopy, underground)</div>
+                    <div class="requirement-item">Abiotic factors it depends on (light, temp, pH, salinity)</div>
+                    <div class="requirement-item">Role in local food webs (e.g., decomposer, herbivore, apex predator)</div>
+                    <div class="requirement-item">Symbiotic relationships (e.g., mutualism, parasitism, commensalism)</div>
+                    <div class="requirement-item">Microbiome or cellular symbionts (e.g., gut bacteria, mycorrhizal fungi)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>4. Behavior, Phenology, and Seasonal Activity</h3>
+                    <div class="requirement-item">Diurnal/nocturnal/crepuscular behavior</div>
+                    <div class="requirement-item">Migration, hibernation, or estivation patterns</div>
+                    <div class="requirement-item">Communication methods (visual, auditory, chemical, electrical)</div>
+                    <div class="requirement-item">Seasonal patterns: flowering, breeding, molting, etc.</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>5. Life Cycle, Reproduction, and Development</h3>
+                    <div class="requirement-item">Major life stages (larva, adult, metamorphosis, etc.)</div>
+                    <div class="requirement-item">Reproductive strategy (sexual/asexual, internal/external fertilization)</div>
+                    <div class="requirement-item">Parental investment or lack thereof</div>
+                    <div class="requirement-item">Mating behaviors and reproductive timing</div>
+                    <div class="requirement-item">Cellular reproduction details (e.g., mitosis, meiosis, gametogenesis)</div>
+                    <div class="requirement-item">Any unique reproductive molecules (e.g., pheromones, yolk proteins)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>6. Molecular and Cellular Biology</h3>
+                    <div class="requirement-item">Key cell types or tissue specializations (e.g., chloroplasts in algae, muscle cells in insects)</div>
+                    <div class="requirement-item">Unique or adaptive biochemical pathways (e.g., CAM photosynthesis, antifreeze proteins, venom peptides)</div>
+                    <div class="requirement-item">Gene regulation or gene expression features (e.g., melanin production, Hox gene expression, epigenetic traits)</div>
+                    <div class="requirement-item">Any known genomic studies or relevance in biotech research (e.g., CRISPR, genome sequencing, model organism status)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>7. Diet, Feeding Strategy, and Digestive Biology</h3>
+                    <div class="requirement-item">What it eats (autotroph/heterotroph/omnivore/etc.)</div>
+                    <div class="requirement-item">Feeding method or behavior (grazing, hunting, filter-feeding, parasitism)</div>
+                    <div class="requirement-item">Digestive adaptations (e.g., gizzards, ruminant stomachs, symbiotic digestion)</div>
+                    <div class="requirement-item">Biochemical digestion (e.g., enzyme usage, pH tolerance)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>8. Physiology and Homeostasis</h3>
+                    <div class="requirement-item">Temperature regulation (ectothermic/endothermic, hibernation, insulation)</div>
+                    <div class="requirement-item">Water balance and excretion (e.g., kidneys, Malpighian tubules, nephridia)</div>
+                    <div class="requirement-item">Hormonal regulation (e.g., stress responses, reproduction hormones)</div>
+                    <div class="requirement-item">Molecular or cellular adaptations for homeostasis (e.g., ion channels, aquaporins, heat shock proteins)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>9. Immune and Defense Mechanisms</h3>
+                    <div class="requirement-item">Innate or adaptive immune strategies (if known)</div>
+                    <div class="requirement-item">Physical defenses (shells, spines, camouflage)</div>
+                    <div class="requirement-item">Molecular defenses (toxins, alkaloids, antimicrobial compounds)</div>
+                    <div class="requirement-item">Immune proteins or genetic resistance traits</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>10. Response to Environmental Changes and Threats</h3>
+                    <div class="requirement-item">How it reacts to urbanization, climate change, pollution, or habitat loss</div>
+                    <div class="requirement-item">Behavioral or physiological resilience or sensitivity</div>
+                    <div class="requirement-item">Molecular or genetic plasticity (e.g., gene expression under stress)</div>
+                    <div class="requirement-item">Long-term ecological or evolutionary implications</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>11. Population Status, Trends, and Dynamics</h3>
+                    <div class="requirement-item">Current population trend (growing, stable, declining)</div>
+                    <div class="requirement-item">Causes of population shifts (e.g., disease, habitat change, hunting)</div>
+                    <div class="requirement-item">Local or global conservation status (IUCN, state list)</div>
+                    <div class="requirement-item">Known reproductive or mortality rates</div>
+                    <div class="requirement-item">Population genetics insights (if studied)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>12. Conservation, Restoration, and Human Impact</h3>
+                    <div class="requirement-item">Human threats: habitat destruction, pollution, climate disruption</div>
+                    <div class="requirement-item">Human benefits: agriculture, medicine, tourism, symbolic roles</div>
+                    <div class="requirement-item">Local or global conservation actions (laws, reserves, breeding programs)</div>
+                    <div class="requirement-item">How individuals or communities can help (citizen science, planting natives, etc.)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>13. Scientific Significance and Research Connections</h3>
+                    <div class="requirement-item">Why scientists study this species (e.g., model organism, indicator species, biomedical relevance)</div>
+                    <div class="requirement-item">Any famous experiments or discoveries involving it</div>
+                    <div class="requirement-item">Fields it connects to (e.g., evolutionary biology, neuroscience, pharmacology)</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>14. Cultural, Ethical, and Historical Relevance</h3>
+                    <div class="requirement-item">Cultural symbolism or folklore</div>
+                    <div class="requirement-item">Historical human relationships (e.g., domestication, fear, reverence)</div>
+                    <div class="requirement-item">Ethical considerations in conserving or controlling this species</div>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>15. Identification and Field Recognition</h3>
+                    <div class="requirement-item">Key visual or auditory features for ID</div>
+                    <div class="requirement-item">How to distinguish it from similar species</div>
+                    <div class="requirement-item">Where and when to look for it in your city</div>
+                    <div class="requirement-item">Photos, sketches, or sound recordings (optional but encouraged)</div>
+                </div>
+                
+                <div class="photo-requirements">
+                    <h3>16. Visual Documentation and Photo Captions</h3>
+                    <p>Contributors must include at least 3 original photographs of the species, each with:</p>
+                    <div class="requirement-item">Date and time the photo was taken</div>
+                    <div class="requirement-item">Location (general area in your city; no exact GPS unless relevant)</div>
+                    <div class="requirement-item">Descriptive caption explaining what the photo shows (e.g., "Male cardinal singing on a rooftop during breeding season (April 2024, 8:15 AM, Prospect Park).")</div>
+                    <p>Photos can show:</p>
+                    <div class="requirement-item">The species in its natural habitat</div>
+                    <div class="requirement-item">Behavior (e.g., hunting, pollination, interaction with others)</div>
+                    <div class="requirement-item">Life stages (e.g., egg, juvenile, adult)</div>
+                    <div class="requirement-item">Tracks, nests, or other signs of presence (if the species is hard to photograph)</div>
+                    <p><strong>(OPTIONAL)</strong> Authors can conduct their own research and data and fully discuss it in this section.</p>
+                </div>
+                
+                <div class="requirement-category">
+                    <h3>17. Sources and Citations</h3>
+                    <div class="requirement-item">Credible sources</div>
+                    <div class="requirement-item">Scientific papers, textbooks, government databases, museum guides, or expert interviews</div>
+                    <div class="requirement-item">Use APA, MLA, or consistent citation style</div>
+                    <div class="requirement-item">Link to original data where possible (e.g., iNaturalist, GBIF, research repositories)</div>
+                </div>
+                
+                <p style="margin-top: 2rem;"><strong>Note:</strong> Articles should be written for a general audience but maintain scientific rigor. Technical terms should be defined when first used.</p>
+                <a href="mailto:ecowestwindsor@gmail.com?subject=Article Submission&body=Please include:%0D%0A%0D%0A1. Your name%0D%0A2. Article title%0D%0A3. Species name%0D%0A4. Attach your article file (Word or PDF)%0D%0A5. Any additional comments" class="email-button">Submit Your Article via Email</a>
+                
+                <p style="margin-top: 1rem; font-size: 0.9rem;">
+                    <em>Alternatively, you can email us directly at ecowestwindsor@gmail.com with the subject "Article Submission"</em>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 West Windsor Ecosystem Initiative. All rights reserved. Contact us at ecowestwindsor@gmail.com</p>
+    </footer>
+</body>
+</html>

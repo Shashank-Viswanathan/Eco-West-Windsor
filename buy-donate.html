@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy/Donate | West Windsor Ecosystem</title>
+    <style>
+        :root {
+            --primary-green: #2c5f2d;
+            --secondary-green: #4CAF50;
+            --light-green: #e8f5e9;
+            --dark-text: #333;
+            --light-text: #f5f5f5;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: #f9f9f9;
+        }
+        
+        /* Navigation Bar (same as other pages) */
+        nav {
+            background-color: var(--primary-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .nav-logo {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin-left: 1.2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--light-green);
+        }
+        
+        /* Hero Section */
+        .buy-hero {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), 
+                rgba(0, 0, 0, 0.5)), 
+                url('https://images.unsplash.com/photo-1458966480358-a0ac42de0a7a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .buy-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Content Section */
+        .buy-container {
+            max-width: 900px;
+            margin: -50px auto 0;
+            padding: 0 2rem 4rem;
+        }
+        
+        .buy-card {
+            background: white;
+            border-radius: 10px;
+            padding: 3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-green);
+        }
+        
+        .construction-icon {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin: 2rem 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-green);
+            margin-top: 1rem;
+        }
+        
+        .cta-button:hover {
+            background: transparent;
+            color: var(--primary-green);
+        }
+        
+        footer {
+            background: var(--primary-green);
+            color: var(--light-text);
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .buy-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .buy-card {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">West Windsor Ecosystem</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="join.html">Join</a></li>
+                <li><a href="buy-donate.html">Buy/Donate</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="credits.html">Credits</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="buy-hero">
+        <div>
+            <h1>Support Our Ecosystem</h1>
+            <p>Future opportunities to contribute financially</p>
+        </div>
+    </section>
+    
+    <!-- Content Section -->
+    <div class="buy-container">
+        <div class="buy-card">
+            <div class="construction-icon">🚧</div>
+            <h2>Coming Soon</h2>
+            <p>We're currently developing our donation and merchandise programs to support local conservation efforts.</p>
+            <p>Check back later for opportunities to financially contribute to our initiative.</p>
+            <p>In the meantime, consider <a href="join.html">joining as a contributor</a> to support us with your time and expertise.</p>
+            <a href="index.html" class="cta-button">Return Home</a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 West Windsor Ecosystem Initiative. All rights reserved. Contact us at ecowestwindsor@gmail.com</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preserving West Windsor Ecosystem</title>
+    <style>
+        :root {
+            --primary-green: #2c5f2d;
+            --secondary-green: #4CAF50;
+            --light-green: #e8f5e9;
+            --dark-text: #333;
+            --light-text: #f5f5f5;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: #f9f9f9;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background-color: var(--primary-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .nav-logo {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin-left: 1.2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--light-green);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), 
+                rgba(0, 0, 0, 0.5)), 
+                url('https://images.unsplash.com/photo-1476231682828-37e571bc172f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Content Sections */
+        .content-section {
+            padding: 4rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-green);
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-item {
+            background: var(--light-green);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-green);
+        }
+        
+        .feature-item h3 {
+            color: var(--primary-green);
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-green);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-green);
+        }
+        
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--primary-green);
+        }
+        
+        .cta-button.secondary:hover {
+            background: var(--primary-green);
+            color: white;
+        }
+        
+        footer {
+            background: var(--primary-green);
+            color: var(--light-text);
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content-card {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-menu li {
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">West Windsor Ecosystem</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="join.html">Join</a></li>
+                <li><a href="buy-donate.html">Buy/Donate</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="credits.html">Credits</a></li>
+                <li><a href="faqs.html">FAQs</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Preserving West Windsor Ecosystem</h1>
+            <div class="button-group">
+                <a href="#explore" class="cta-button secondary">Explore Species</a>
+                <a href="join.html" class="cta-button">Want to help?</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Mission Section -->
+    <section id="mission" class="content-section">
+        <div class="content-card">
+            <h2>Our Goal</h2>
+            <p>We seek to highlight the often-overlooked biodiversity in our city, encouraging people to recognize and appreciate the species that live alongside us. Many are unaware of the wildlife in their own neighborhoods, let alone global conservation issues.</p>
+            <p>By providing engaging, accessible information on local species and environmental challenges, this site aims to inspire curiosity, awareness, and action—empowering the community to protect and coexist with nature.</p>
+            <p><b>Disclaimer: The scientific information presented on this website is based on credible research and external sources. I do not claim original discovery. Full citations are provided at the bottom of each article.</b></p>
+        </div>
+    </section>
+    
+    <!-- Insert this right after the first paragraph in the Mission Section -->
+<div class="feature-item" style="margin-top: 2rem; background-color: #e8f5e9; padding: 1.5rem; border-radius: 8px;">
+    <h3 style="color: #2c5f2d; margin-top: 0;">Call for Contributors</h3>
+    <p><strong>Students:</strong> If you're in high school or college studying biology, ecology, or environmental science, this is an excellent opportunity to:</p>
+    <ul style="margin-bottom: 1rem;">
+        <li>Gain hands-on field research experience</li>
+        <li>Build your academic portfolio</li>
+        <li>Earn credit for independent study or service hours</li>
+        <li>Contribute to meaningful conservation work</li>
+    </ul>
+    <p><strong>Adult Contributors:</strong> Those with relevant knowledge can:</p>
+    <ul>
+        <li>Receive formal recognition for all verified contributions</li>
+        <li>Mentor student participants</li>
+        <li>Help shape local conservation efforts</li>
+    </ul>
+    <a href="join.html" class="cta-button" style="margin-top: 1rem;">Learn How to Participate</a>
+</div>
+
+    <!-- Explore Section -->
+    <section id="explore" class="content-section">
+        <div class="content-card">
+            <h2>Explore West Windsor's Biodiversity</h2>
+            <p>Our community-built database documents the plants and animals of West Windsor, tracking how environmental changes are affecting local species. Each entry follows a consistent format to help you easily find and compare information.</p>
+            
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3>Species Documentation</h3>
+                    <p>Discover detailed profiles of local flora and fauna, each with high-quality images and descriptions of their ecological roles in our community.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Impact Analysis</h3>
+                    <p>Learn how climate change, urbanization, and other factors are currently affecting each species' population and behavior patterns.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Conservation Status</h3>
+                    <p>See which species are thriving and which need protection, with actionable suggestions for how you can help.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Community Contributions</h3>
+                    <p>All content is created and reviewed by local experts and volunteers, ensuring accurate, up-to-date information.</p>
+                </div>
+            </div>
+            
+            <p>Every species document includes:</p>
+            <ul>
+                <li>Clear photographs from multiple angles</li>
+                <li>Current population trends in West Windsor</li>
+                <li>Documented environmental pressures</li>
+                <li>Conservation recommendations</li>
+                <li>Seasonal activity patterns</li>
+            </ul>
+            
+            <a href="learn.html" class="cta-button">Browse Species Database</a>
+        </div>
+    </section>
+    
+    <!-- Feedback Section -->
+    <section id="feedback" class="content-section">
+        <div class="content-card">
+            <h2>Share Your Feedback</h2>
+            <p>We value your input to help improve this initiative. Please take a moment to share your thoughts, suggestions, or report any issues you've encountered.</p>
+            <p>Your feedback will help us:</p>
+            <ul>
+                <li>Improve the quality and accuracy of our content</li>
+                <li>Identify areas where we can expand our coverage</li>
+                <li>Enhance the user experience of our website</li>
+                <li>Better serve the community's conservation needs</li>
+            </ul>
+            <a href="https://docs.google.com/forms/d/1ewA1O4d-LU7SuiZUtf0OIHGqnl09whxCWKNpyPOivAc/edit#responses" class="cta-button" target="_blank">Provide Feedback</a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 West Windsor Ecosystem Initiative. All rights reserved. Contact us as ecowestwindsor@gmail.com</p>
+    </footer>
+</body>
+</html>
