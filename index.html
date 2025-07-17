@@ -225,6 +225,22 @@
             padding: 1.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             position: relative;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        
+        .project-card p {
+            margin-bottom: 0;
+        }
+        
+        .project-card a {
+            color: var(--primary-green);
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        
+        .project-card a:hover {
+            color: var(--secondary-green);
         }
         
         .project-card h3 {
@@ -429,7 +445,7 @@
         const projects = [
             {
                 title: "#forTheSquirrels",
-                description: "Post a picture of yourself planting a tree to help conserve squirrels habitats: https://docs.google.com/forms/d/e/1FAIpQLSfJof9z9hbkzSOiM7muhcRizj_HYg1ZVTysoTCBWv-j-YNoAw/viewform?usp=header. If you are a member of our site, we will add a contribution to your profile which will be added to your certificate. Otherwise, if you allow us to do so in the form, you can go on the site as a contributor to the #forTheSquirrels project.",
+                description: `Post a picture of yourself planting a tree to help conserve squirrels habitats: <a href="https://docs.google.com/forms/d/e/1FAIpQLSfJof9z9hbkzSOiM7muhcRizj_HYg1ZVTysoTCBWv-j-YNoAw/viewform?usp=header" target="_blank">Google Form Link</a>. If you are a member of our site, we will add a contribution to your profile which will be added to your certificate. Otherwise, if you allow us to do so in the form, you can go on the site as a contributor to the #forTheSquirrels project.`,
                 status: "active"
             }
         ];
