@@ -7,7 +7,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-Z6WVJ5BMB3');
     </script>
     <meta name="google-site-verification" content="p2Xg6XJJIg5QldGa1XFGG4Cu7Vvv8SY2ZtBZiifvWW0" />
@@ -212,6 +211,52 @@
             color: white;
         }
         
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .project-card h3 {
+            color: var(--primary-green);
+            margin-top: 0;
+        }
+        
+        .project-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .status-inactive {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .status-planned {
+            background-color: #FFC107;
+            color: #333;
+        }
+        
         footer {
             background: var(--primary-green);
             color: var(--light-text);
@@ -260,6 +305,7 @@
                 <li><a href="join.html">Join</a></li>
                 <li><a href="buy-donate.html">Buy/Donate</a></li>
                 <li><a href="learn.html">Learn</a></li>
+                <li><a href="#projects">Projects</a></li>
                 <li><a href="credits.html">Credits</a></li>
                 <li><a href="faqs.html">FAQs</a></li>
             </ul>
@@ -273,6 +319,7 @@
             <div class="button-group">
                 <a href="#explore" class="cta-button secondary">Explore Species</a>
                 <a href="join.html" class="cta-button">Want to help?</a>
+                <a href="#projects" class="cta-button secondary">View Projects</a>
             </div>
         </div>
     </section>
@@ -360,9 +407,88 @@
         </div>
     </section>
     
+    <!-- Projects Section -->
+    <section id="projects" class="content-section">
+        <div class="content-card">
+            <h2>Current Projects</h2>
+            <p>Explore our ongoing initiatives to document and protect West Windsor's biodiversity. Each project represents a collaborative effort between community members, students, and local experts.</p>
+            
+            <div class="projects-grid" id="projects-container">
+                <!-- Projects will be dynamically inserted here by JavaScript -->
+            </div>
+        </div>
+    </section>
+    
     <!-- Footer -->
     <footer>
         <p>© 2025 West Windsor Ecosystem Initiative. All rights reserved. Contact us as ecowestwindsor@gmail.com</p>
     </footer>
+
+    <script>
+        // PROJECTS DATA - Easy to edit array
+        const projects = [
+            {
+                title: "Urban Wildlife Monitoring",
+                description: "A comprehensive survey of mammal and bird species adapting to urban environments in West Windsor, using motion-sensor cameras and community sightings.",
+                status: "active"
+            },
+            {
+                title: "Native Plant Restoration",
+                description: "Restoring native plant species in local parks and public spaces to support pollinators and improve ecosystem resilience.",
+                status: "active"
+            },
+            {
+                title: "Schoolyard Habitat Program",
+                description: "Partnering with local schools to create wildlife-friendly habitats on school grounds while providing outdoor learning opportunities.",
+                status: "planned"
+            },
+            {
+                title: "Invasive Species Mapping",
+                description: "Documenting the spread of invasive plant and animal species in our area to inform management strategies.",
+                status: "active"
+            },
+            {
+                title: "Amphibian Road Crossing",
+                description: "Seasonal monitoring and protection of amphibian migration routes during spring breeding seasons.",
+                status: "inactive"
+            },
+            {
+                title: "Community Science Training",
+                description: "Workshops to train volunteers in species identification, data collection, and conservation techniques.",
+                status: "planned"
+            }
+        ];
+
+        // Function to render projects
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            
+            projects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                
+                // Determine status class based on project status
+                let statusClass = '';
+                if (project.status === 'active') {
+                    statusClass = 'status-active';
+                } else if (project.status === 'inactive') {
+                    statusClass = 'status-inactive';
+                } else {
+                    statusClass = 'status-planned';
+                }
+                
+                projectCard.innerHTML = `
+                    <span class="project-status ${statusClass}">${project.status.charAt(0).toUpperCase() + project.status.slice(1)}</span>
+                    <h3>${project.title}</h3>
+                    <p>${project.description}</p>
+                `;
+                
+                container.appendChild(projectCard);
+            });
+        }
+
+        // Call the function when the page loads
+        document.addEventListener('DOMContentLoaded', renderProjects);
+    </script>
 </body>
 </html>
