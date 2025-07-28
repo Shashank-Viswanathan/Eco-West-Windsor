@@ -187,30 +187,10 @@
             margin-top: 0;
         }
         
-        /* Document Viewer */
-        .doc-viewer {
-            margin-top: 3rem;
-            display: none;
-        }
-        
-        .doc-viewer iframe {
-            width: 100%;
-            height: 70vh;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        
-        .back-button {
-            display: inline-block;
-            background: var(--primary-green);
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
+        .doc-card a {
+            color: inherit;
             text-decoration: none;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            border: none;
-            cursor: pointer;
+            display: block;
         }
         
         footer {
@@ -287,12 +267,6 @@
                 <div class="doc-list" id="conceptsDocList">
                     <!-- Biology concept documents will be populated here by JavaScript -->
                 </div>
-            </div>
-            
-            <!-- Document Viewer -->
-            <div class="doc-viewer" id="docViewer">
-                <button class="back-button" id="backButton">← Back to List</button>
-                <iframe id="docFrame" src=""></iframe>
             </div>
         </div>
     </div>
@@ -382,9 +356,14 @@
             const conceptsSearchInput = document.getElementById('conceptsSearchInput');
             const speciesDocList = document.getElementById('speciesDocList');
             const conceptsDocList = document.getElementById('conceptsDocList');
-            const docViewer = document.getElementById('docViewer');
-            const docFrame = document.getElementById('docFrame');
-            const backButton = document.getElementById('backButton');
+
+            // Helper function to create URL-friendly slugs from titles
+            function createSlug(title) {
+                return title.toLowerCase()
+                    .replace(/[^\w\s-]/g, '') // Remove non-word characters
+                    .replace(/\s+/g, '-')      // Replace spaces with hyphens
+                    .replace(/--+/g, '-');      // Replace multiple hyphens with single
+            }
 
             // Display functions
             function displayDocuments(docs, container) {
@@ -398,26 +377,20 @@
                 docs.forEach(doc => {
                     const docCard = document.createElement('div');
                     docCard.className = 'doc-card';
-                    docCard.innerHTML = `
-                        <h3>${doc.title}</h3>
-                        <p>${doc.description}</p>
-                        <div class="tags">${doc.tags ? doc.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ') : ''}</div>
-                    `;
                     
-                    docCard.addEventListener('click', function() {
-                        showDocument(doc.id);
-                    });
+                    // Create URL from title
+                    const docUrl = `https://shashank-viswanathan.github.io/Eco-West-Windsor/${createSlug(doc.title)}.html`;
+                    
+                    docCard.innerHTML = `
+                        <a href="${docUrl}" target="_blank">
+                            <h3>${doc.title}</h3>
+                            <p>${doc.description}</p>
+                            <div class="tags">${doc.tags ? doc.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ') : ''}</div>
+                        </a>
+                    `;
                     
                     container.appendChild(docCard);
                 });
-            }
-
-            function showDocument(docId) {
-                if (!docId) return;
-                docFrame.src = `https://docs.google.com/document/d/${docId}/preview?embedded=true`;
-                speciesDocList.style.display = 'none';
-                conceptsDocList.style.display = 'none';
-                docViewer.style.display = 'block';
             }
 
             // Event listeners
@@ -439,12 +412,6 @@
                     (doc.tags && doc.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
                 );
                 displayDocuments(filteredDocs, conceptsDocList);
-            });
-
-            backButton.addEventListener('click', function() {
-                docViewer.style.display = 'none';
-                speciesDocList.style.display = 'grid';
-                conceptsDocList.style.display = 'grid';
             });
 
             // Initial display
