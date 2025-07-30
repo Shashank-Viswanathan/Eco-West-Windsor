@@ -143,11 +143,25 @@
       color: #555;
     }
 
+    .search-box {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 50px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box:focus {
+      border-color: var(--secondary-green);
+    }
+
     .doc-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
-      margin-top: 2rem;
     }
 
     .doc-card {
@@ -227,17 +241,19 @@
   <div class="learn-container">
     <div class="learn-card">
 
+      <!-- Species Section -->
       <div class="search-section">
         <h2>Search Species</h2>
         <p class="search-description">Explore known species in our region</p>
-        <div class="doc-list">
-          <div class="doc-card">
+        <input type="text" class="search-box" id="speciesSearch" placeholder="Search by species name...">
+        <div class="doc-list" id="speciesList">
+          <div class="doc-card" data-title="Asian Lady Beetle">
             <a href="asian-lady-beetle.html">
               <h3>Asian Lady Beetle</h3>
               <p>This ladybug is a commonly found, "indoor pest" during the winter.</p>
             </a>
           </div>
-          <div class="doc-card">
+          <div class="doc-card" data-title="Eastern Grey Squirrel">
             <a href="eastern-grey-squirrel.html">
               <h3>Eastern Grey Squirrel</h3>
               <p>One of the most common squirrels we see in our community</p>
@@ -246,19 +262,66 @@
         </div>
       </div>
 
+      <!-- Concepts Section -->
       <div class="search-section">
         <h2>Biology Concepts</h2>
         <p class="search-description">Understand the science behind ecosystems</p>
-        <div class="doc-list">
-          <div class="doc-card"><a href="taxonomy.html"><h3>Taxonomy</h3><p>Identifying, naming, and classifying species into a hierarchical structure based on shared traits and genetic relationships</p></a></div>
-          <div class="doc-card"><a href="response-to-environmental-threats-and-changes.html"><h3>Response to Environmental Threats and Changes</h3><p>How Organisms Respond to Changing Times</p></a></div>
-          <div class="doc-card"><a href="immune-and-defense-mechanisms.html"><h3>Immune and Defense Mechanisms</h3><p>How Organisms Protect Themselves Against Hazards</p></a></div>
-          <div class="doc-card"><a href="physiology-and-homeostasis.html"><h3>Physiology and Homeostasis</h3><p>Study of Internal Functions and Balance in Living Organisms</p></a></div>
-          <div class="doc-card"><a href="diet-feeding-mode-reproductive-biology.html"><h3>Diet, Feeding Mode, Reproductive Biology</h3><p>Nutritional Patterns, Feeding Strategies, and Reproductive Systems</p></a></div>
-          <div class="doc-card"><a href="molecular-and-cellular-biology.html"><h3>Molecular and Cellular Biology</h3><p>Fundamental Biological Processes at Molecular and Cellular Levels</p></a></div>
-          <div class="doc-card"><a href="ecological-profile.html"><h3>Ecological Profile</h3><p>Characteristics and Interactions Within Ecosystems</p></a></div>
-          <div class="doc-card"><a href="life-cycle-development-and-reproduction.html"><h3>Life Cycle, Development, and Reproduction</h3><p>Growth Stages and Reproductive Strategies Across Species</p></a></div>
-          <div class="doc-card"><a href="behavior-phenology-and-seasonal-activity.html"><h3>Behavior, Phenology, and Seasonal Activity</h3><p>Organism Behavior Patterns and Seasonal Biological Events</p></a></div>
+        <input type="text" class="search-box" id="conceptsSearch" placeholder="Search biology concepts...">
+        <div class="doc-list" id="conceptsList">
+          <div class="doc-card" data-title="Taxonomy">
+            <a href="taxonomy.html">
+              <h3>Taxonomy</h3>
+              <p>Identifying, naming, and classifying species into a hierarchical structure based on shared traits and genetic relationships</p>
+            </a>
+          </div>
+          <div class="doc-card" data-title="Response to Environmental Threats and Changes">
+            <a href="response-to-environmental-threats-and-changes.html">
+              <h3>Response to Environmental Threats and Changes</h3>
+              <p>How Organisms Respond to Changing Times</p>
+            </a>
+          </div>
+          <div class="doc-card" data-title="Immune and Defense Mechanisms">
+            <a href="immune-and-defense-mechanisms.html">
+              <h3>Immune and Defense Mechanisms</h3>
+              <p>How Organisms Protect Themselves Against Hazards</p>
+            </a>
+          </div>
+          <div class="doc-card" data-title="Physiology and Homeostasis">
+            <a href="physiology-and-homeostasis.html">
+              <h3>Physiology and Homeostasis</h3>
+              <p>Study of Internal Functions and Balance in Living Organisms</p>
+            </a>
+          </div>
+          <div class="doc-card" data-title="Diet, Feeding Mode, Reproductive Biology">
+            <a href="diet-feeding-mode-reproductive-biology.html">
+              <h3>Diet, Feeding Mode, Reproductive Biology</h3>
+              <p>Nutritional Patterns, Feeding Strategies, and Reproductive Systems</p>
+            </a>
+          </div>
+          <div class="doc-card" data-title="Molecular and Cellular Biology">
+            <a href="molecular-and-cellular-biology.html">
+              <h3>Molecular and Cellular Biology</h3>
+              <p>Fundamental Biological Processes at Molecular and Cellular Levels</p>
+            </a>
+          </div>
+          <div class="doc-card" data-title="Ecological Profile">
+            <a href="ecological-profile.html">
+              <h3>Ecological Profile</h3>
+              <p>Characteristics and Interactions Within Ecosystems</p>
+            </a>
+          </div>
+          <div class="doc-card" data-title="Life Cycle, Development, and Reproduction">
+            <a href="life-cycle-development-and-reproduction.html">
+              <h3>Life Cycle, Development, and Reproduction</h3>
+              <p>Growth Stages and Reproductive Strategies Across Species</p>
+            </a>
+          </div>
+          <div class="doc-card" data-title="Behavior, Phenology, and Seasonal Activity">
+            <a href="behavior-phenology-and-seasonal-activity.html">
+              <h3>Behavior, Phenology, and Seasonal Activity</h3>
+              <p>Organism Behavior Patterns and Seasonal Biological Events</p>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -268,6 +331,24 @@
   <footer>
     <p>© 2025 Eco West Windsor Initiative. All rights reserved. Contact us at ecowestwindsor@gmail.com</p>
   </footer>
+
+  <script>
+    function filterDocs(inputId, listId) {
+      const input = document.getElementById(inputId);
+      const list = document.getElementById(listId);
+      input.addEventListener('input', function () {
+        const search = input.value.toLowerCase();
+        const cards = list.querySelectorAll('.doc-card');
+        cards.forEach(card => {
+          const title = card.getAttribute('data-title').toLowerCase();
+          card.style.display = title.includes(search) ? 'block' : 'none';
+        });
+      });
+    }
+
+    filterDocs('speciesSearch', 'speciesList');
+    filterDocs('conceptsSearch', 'conceptsList');
+  </script>
 
 </body>
 </html>
