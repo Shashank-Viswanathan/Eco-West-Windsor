@@ -2,15 +2,206 @@
 <html lang="en">
 <head>
   <link rel="canonical" href="https://shashank-viswanathan.github.io/Eco-West-Windsor/learn.html" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z6WVJ5BMB3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Z6WVJ5BMB3');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Learn | Eco West Windsor</title>
   <style>
-    /* [Keep all your original CSS here – unchanged] */
+    :root {
+      --primary-green: #2c5f2d;
+      --secondary-green: #4CAF50;
+      --light-green: #e8f5e9;
+      --dark-text: #333;
+      --light-text: #f5f5f5;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      color: var(--dark-text);
+      background-color: #f9f9f9;
+    }
+
+    nav {
+      background-color: var(--primary-green);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+    }
+
+    .nav-logo {
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-decoration: none;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-menu li {
+      margin-left: 1.2rem;
+    }
+
+    .nav-menu a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .nav-menu a:hover {
+      color: var(--light-green);
+    }
+
+    .learn-hero {
+      background: 
+        linear-gradient(rgba(0, 0, 0, 0.5), 
+        rgba(0, 0, 0, 0.5)), 
+        url('https://images.unsplash.com/photo-1452570053594-1b985d6ea890?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+
+    .learn-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .learn-container {
+      max-width: 1200px;
+      margin: -50px auto 0;
+      padding: 0 2rem 4rem;
+    }
+
+    .learn-card {
+      background: white;
+      border-radius: 10px;
+      padding: 2.5rem;
+      box-shadow: 0 5px 15px rgba( 0, 0, 0, 0.1 );
+    }
+
+    h2 {
+      color: var(--primary-green);
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 80px;
+      height: 3px;
+      background: var(--secondary-green);
+    }
+
+    .search-section {
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .search-description {
+      margin-bottom: 1rem;
+      font-style: italic;
+      color: #555;
+    }
+
+    .doc-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .doc-card {
+      background: var(--light-green);
+      padding: 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .doc-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .doc-card h3 {
+      color: var(--primary-green);
+      margin-top: 0;
+    }
+
+    .doc-card a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+
+    footer {
+      background: var(--primary-green);
+      color: var(--light-text);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .learn-hero h1 {
+        font-size: 2rem;
+      }
+
+      .learn-card {
+        padding: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      .doc-list {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Navigation Bar -->
+
   <nav>
     <div class="nav-container">
       <a href="index.html" class="nav-logo">Eco West Windsor</a>
@@ -26,7 +217,6 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section class="learn-hero">
     <div>
       <h1>Species Database</h1>
@@ -34,11 +224,9 @@
     </div>
   </section>
 
-  <!-- Learn Content -->
   <div class="learn-container">
     <div class="learn-card">
 
-      <!-- Species Search Section -->
       <div class="search-section">
         <h2>Search Species</h2>
         <p class="search-description">Explore known species in our region</p>
@@ -58,7 +246,6 @@
         </div>
       </div>
 
-      <!-- Biology Concepts Search Section -->
       <div class="search-section">
         <h2>Biology Concepts</h2>
         <p class="search-description">Understand the science behind ecosystems</p>
@@ -78,9 +265,9 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer>
     <p>© 2025 Eco West Windsor Initiative. All rights reserved. Contact us at ecowestwindsor@gmail.com</p>
   </footer>
+
 </body>
 </html>
