@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://shashank-viswanathan.github.io/Eco-West-Windsor/deepwoods.html" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z6WVJ5BMB3"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Deep Woods — Configurable Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --forest-green: #1b3a2b;
+            --canopy-dark: #0f281c;
+            --moss: #3a6b47;
+            --bark: #5d4037;
+            --acorn: #8d6e3f;
+            --sap: #c9a84c;
+            --light-frost: #d4e9f7;
+            --squirrel-fur: #7a6b5a;
+            --cicada-wing: #8cb87a;
+            --panel-bg: rgba(26, 46, 33, 0.94);
+            --text-light: #e8f0e6;
+            --text-muted: #a0b89a;
+            --radius: 14px;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s ease;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--canopy-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(42, 80, 52, 0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(30, 60, 40, 0.20) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.03) 0px, rgba(0, 0, 0, 0.03) 2px, transparent 2px, transparent 6px);
+        }
+
+        .sim-container {
+            width: 100%;
+            max-width: 1360px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(4px);
+            border-radius: var(--radius);
+            padding: 22px 28px 28px;
+            box-shadow: none;
+            border: 1px solid rgba(90, 140, 100, 0.15);
+            transition: opacity 0.4s ease;
+            margin-top: 0;
+        }
+
+        .sim-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(120, 170, 120, 0.15);
+        }
+
+        .sim-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sim-header h1 span {
+            background: rgba(58, 107, 71, 0.35);
+            padding: 2px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+        .header-stats .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px 14px 4px 12px;
+            border-radius: 30px;
+            border: 1px solid rgba(120, 170, 120, 0.08);
+        }
+        .header-stats .stat-item .label {
+            color: var(--text-muted);
+        }
+        .header-stats .stat-item .value {
+            font-weight: 600;
+            color: #cde6c0;
+        }
+        .season-badge {
+            background: #2b5a3a;
+            padding: 2px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(160, 210, 150, 0.2);
+        }
+
+        .settings-toggle {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(120, 170, 120, 0.15);
+            color: var(--text-light);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font);
+            margin-left: 10px;
+        }
+        .settings-toggle:hover {
+            background: rgba(120, 170, 120, 0.15);
+        }
+
+        .settings-panel {
+            display: none;
+            background: rgba(0, 0, 0, 0.30);
+            border-radius: var(--radius);
+            padding: 16px 20px 20px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(120, 170, 120, 0.08);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px 30px;
+            transition: all 0.3s ease;
+        }
+        .settings-panel.open {
+            display: grid;
+        }
+        .settings-panel .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .settings-panel .setting-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+        .settings-panel .setting-group label .val {
+            color: #cde6c0;
+            font-weight: 600;
+        }
+        .settings-panel input[type="range"] {
+            width: 100%;
+            accent-color: #4a8a5a;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            height: 4px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .settings-panel input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4a8a5a;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .settings-panel input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4a8a5a;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .metric-card {
+            background: rgba(0, 0, 0, 0.30);
+            border-radius: 10px;
+            padding: 8px 12px 10px;
+            border: 1px solid rgba(120, 170, 120, 0.06);
+            transition: border var(--transition);
+        }
+        .metric-card:hover {
+            border-color: rgba(120, 170, 120, 0.20);
+        }
+        .metric-card .metric-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+        .metric-card .metric-bar {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2px;
+        }
+        .metric-card .metric-bar .fill {
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.6s ease;
+            background: linear-gradient(90deg, #4a8a5a, #7ac47a);
+        }
+        .metric-card .metric-value {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 2px;
+            color: #d8eed0;
+        }
+        .metric-card .metric-value small {
+            font-weight: 300;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 22px;
+            margin-top: 4px;
+        }
+
+        .chart-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius);
+            padding: 14px 16px 16px;
+            border: 1px solid rgba(120, 170, 120, 0.06);
+        }
+        .chart-panel .chart-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chart-panel .chart-title .legend {
+            display: flex;
+            gap: 14px;
+            font-size: 0.7rem;
+        }
+        .chart-panel .chart-title .legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chart-panel .chart-title .legend .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot-squirrel {
+            background: #b8956a;
+        }
+        .dot-cicada {
+            background: #7fb07a;
+        }
+
+        #populationChart {
+            width: 100%;
+            height: 180px;
+            display: block;
+            background: rgba(0, 0, 0, 0.20);
+            border-radius: 8px;
+        }
+
+        .species-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .species-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius);
+            padding: 14px 16px 16px;
+            border: 1px solid rgba(120, 170, 120, 0.06);
+            transition: border var(--transition);
+        }
+        .species-panel:hover {
+            border-color: rgba(120, 170, 120, 0.15);
+        }
+        .species-panel .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .species-panel .panel-head h3 {
+            font-size: 1.0rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .species-panel .panel-head .badge {
+            font-size: 0.6rem;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 2px 10px;
+            border-radius: 30px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+        .species-panel .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 14px;
+            margin-top: 2px;
+        }
+        .species-panel .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .species-panel .stat-row .s-label {
+            color: var(--text-muted);
+        }
+        .species-panel .stat-row .s-value {
+            font-weight: 500;
+            color: #d8eed0;
+        }
+        .species-panel .stat-row .s-value.danger {
+            color: #e8877a;
+        }
+        .species-panel .stat-row .s-value.warning {
+            color: #e8c87a;
+        }
+        .species-panel .stat-row .s-value.success {
+            color: #7ac47a;
+        }
+
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(120, 170, 120, 0.08);
+        }
+        .controls-row .btn-group {
+            display: flex;
+            gap: 5px;
+        }
+        .controls-row button {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(120, 170, 120, 0.15);
+            color: var(--text-light);
+            padding: 5px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font);
+        }
+        .controls-row button:hover {
+            background: rgba(120, 170, 120, 0.15);
+            border-color: rgba(120, 170, 120, 0.30);
+            transform: translateY(-1px);
+        }
+        .controls-row button:active {
+            transform: scale(0.97);
+        }
+        .controls-row button.primary {
+            background: #2b5a3a;
+            border-color: #3a7a4a;
+        }
+        .controls-row button.primary:hover {
+            background: #3a7a4a;
+        }
+        .controls-row button.danger {
+            border-color: rgba(200, 80, 70, 0.3);
+            color: #e8877a;
+        }
+        .controls-row button.danger:hover {
+            background: rgba(200, 80, 70, 0.12);
+        }
+        .controls-row .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .controls-row .speed-control input[type="range"] {
+            width: 70px;
+            accent-color: #4a8a5a;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            height: 4px;
+            cursor: pointer;
+        }
+        .controls-row .speed-control .speed-label {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .alert-banner {
+            margin-top: 12px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            background: rgba(200, 80, 70, 0.12);
+            border: 1px solid rgba(200, 80, 70, 0.15);
+            color: #e8a89a;
+            font-size: 0.8rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-banner.show {
+            display: flex;
+        }
+
+        @media (max-width: 920px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .sim-container {
+                padding: 14px 12px 16px;
+            }
+            .sim-header h1 {
+                font-size: 1.3rem;
+            }
+            .settings-panel {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 500px) {
+            .settings-panel {
+                grid-template-columns: 1fr;
+            }
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .controls-row .speed-control {
+                margin-left: 0;
+            }
+            .species-panel .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        * { border-radius: 0 !important; }
+    </style>
+</head>
+<body>
+
+    <div class="sim-container" id="app">
+        <header class="sim-header">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;">
+                <h1>
+                    The Deep Woods
+                </h1>
+                <button class="settings-toggle" onclick="toggleSettings()">Parameters</button>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item"><span class="label">Day</span><span class="value" id="dayDisplay">1</span></div>
+                <div class="stat-item"><span class="label">Season</span><span class="season-badge" id="seasonDisplay">Spring</span></div>
+                <div class="stat-item"><span class="label">Temp</span><span class="value" id="tempDisplay">14 C</span></div>
+                <div class="stat-item"><span class="label">Time</span><span class="value" id="timeDisplay">06:00</span></div>
+            </div>
+        </header>
+
+        <div class="settings-panel" id="settingsPanel">
+            <div class="setting-group">
+                <label>Nest Capacity <span class="val" id="val_maxNests">25</span></label>
+                <input type="range" id="slider_maxNests" min="5" max="50" value="25" step="1" oninput="updateConfig('squirrel','maxNests', this.value, 'val_maxNests')">
+            </div>
+            <div class="setting-group">
+                <label>Autumn Caching Boost <span class="val" id="val_autumnForage">2.8</span></label>
+                <input type="range" id="slider_autumnForage" min="1.0" max="5.0" value="2.8" step="0.1" oninput="updateConfig('squirrel','autumnForageMultiplier', this.value, 'val_autumnForage')">
+            </div>
+            <div class="setting-group">
+                <label>Base Foraging Rate <span class="val" id="val_baseForage">0.06</span></label>
+                <input type="range" id="slider_baseForage" min="0.01" max="0.20" value="0.06" step="0.005" oninput="updateConfig('squirrel','baseForageRate', this.value, 'val_baseForage')">
+            </div>
+            <div class="setting-group">
+                <label>Predator Base Pressure <span class="val" id="val_predBase">0.15</span></label>
+                <input type="range" id="slider_predBase" min="0.0" max="0.50" value="0.15" step="0.01" oninput="updateConfig('environment','predatorBase', this.value, 'val_predBase')">
+            </div>
+            <div class="setting-group">
+                <label>Emergence Nymph Threshold <span class="val" id="val_emergeThresh">1.5</span></label>
+                <input type="range" id="slider_emergeThresh" min="0.5" max="3.0" value="1.5" step="0.1" oninput="updateConfig('cicada','emergenceThreshold', this.value, 'val_emergeThresh')">
+            </div>
+            <div class="setting-group">
+                <label>Cicada Mating Temp <span class="val" id="val_matingTemp">24</span></label>
+                <input type="range" id="slider_matingTemp" min="18" max="30" value="24" step="1" oninput="updateConfig('cicada','matingTemp', this.value, 'val_matingTemp')">
+            </div>
+            <div class="setting-group">
+                <label>Adult Lifespan (days) <span class="val" id="val_lifespan">35</span></label>
+                <input type="range" id="slider_lifespan" min="10" max="70" value="35" step="1" oninput="updateConfig('cicada','adultLifespan', this.value, 'val_lifespan')">
+            </div>
+            <div class="setting-group">
+                <label>Initial Nymph Density <span class="val" id="val_initNymph">1.2</span></label>
+                <input type="range" id="slider_initNymph" min="0.1" max="3.0" value="1.2" step="0.1" oninput="updateConfig('cicada','initialNymphDensity', this.value, 'val_initNymph')">
+            </div>
+        </div>
+
+        <div class="metrics-row" id="metricsRow">
+            <div class="metric-card"><div class="metric-label"><span>Acorn Volume</span><span id="acornPct">0%</span></div><div class="metric-bar"><div class="fill" id="acornFill" style="width:0%"></div></div><div class="metric-value"><span id="acornVal">0</span> <small>kg</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Tree Sap</span><span id="sapPct">0%</span></div><div class="metric-bar"><div class="fill" id="sapFill" style="width:0%"></div></div><div class="metric-value"><span id="sapVal">0</span> <small>units</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Canopy Density</span><span id="canopyPct">0%</span></div><div class="metric-bar"><div class="fill" id="canopyFill" style="width:0%"></div></div><div class="metric-value"><span id="canopyVal">0</span> <small>%</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Soil Moisture</span><span id="moistPct">0%</span></div><div class="metric-bar"><div class="fill" id="moistFill" style="width:0%"></div></div><div class="metric-value"><span id="moistVal">0</span> <small>%</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Predator Pressure</span><span id="predPct">0%</span></div><div class="metric-bar"><div class="fill" id="predFill" style="width:0%; background:linear-gradient(90deg,#a05a4a,#d48a7a)"></div></div><div class="metric-value"><span id="predVal">0</span> <small>nearby</small></div></div>
+        </div>
+
+        <div class="main-grid">
+            <div class="chart-panel">
+                <div class="chart-title">
+                    <span>Population Over Time</span>
+                    <div class="legend"><span><span class="dot dot-squirrel"></span> Squirrel</span><span><span class="dot dot-cicada"></span> Cicada</span></div>
+                </div>
+                <canvas id="populationChart" width="600" height="180"></canvas>
+                <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-muted);margin-top:2px;"><span>Day 1</span><span id="chartLatestDay">Day 1</span></div>
+            </div>
+
+            <div class="species-stack">
+                <div class="species-panel" id="squirrelPanel">
+                    <div class="panel-head"><h3>Eastern Gray Squirrel</h3><span class="badge" id="squirrelStatus">inactive</span></div>
+                    <div class="stats-grid">
+                        <div class="stat-row"><span class="s-label">Population</span><span class="s-value" id="squirrelPop">48</span></div>
+                        <div class="stat-row"><span class="s-label">Nests Occupied</span><span class="s-value" id="squirrelNests">14 / 25</span></div>
+                        <div class="stat-row"><span class="s-label">Acorn Cache</span><span class="s-value" id="squirrelCache">210</span></div>
+                        <div class="stat-row"><span class="s-label">Winter Survival</span><span class="s-value" id="squirrelSurvival">92%</span></div>
+                        <div class="stat-row"><span class="s-label">Active Foraging</span><span class="s-value" id="squirrelActive">0</span></div>
+                        <div class="stat-row"><span class="s-label">Predator Encounters</span><span class="s-value" id="squirrelPred">0</span></div>
+                    </div>
+                </div>
+
+                <div class="species-panel" id="cicadaPanel">
+                    <div class="panel-head"><h3>Lyric Cicada</h3><span class="badge" id="cicadaStatus">dormant</span></div>
+                    <div class="stats-grid">
+                        <div class="stat-row"><span class="s-label">Adult Population</span><span class="s-value" id="cicadaAdult">0</span></div>
+                        <div class="stat-row"><span class="s-label">Nymph Density</span><span class="s-value" id="cicadaNymph">1.2M / m²</span></div>
+                        <div class="stat-row"><span class="s-label">Mating Activity</span><span class="s-value" id="cicadaMating">inactive</span></div>
+                        <div class="stat-row"><span class="s-label">Emergence</span><span class="s-value" id="cicadaEmerge">—</span></div>
+                        <div class="stat-row"><span class="s-label">Days Since Emerge</span><span class="s-value" id="cicadaDays">—</span></div>
+                        <div class="stat-row"><span class="s-label">Frost Kill</span><span class="s-value" id="cicadaFrost">none</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-banner" id="alertBanner"><span class="icon"></span><span id="alertMessage">Frost detected</span></div>
+
+        <div class="controls-row">
+            <div class="btn-group">
+                <button id="playBtn" class="primary" onclick="togglePlay()">Pause</button>
+                <button onclick="stepOnce()">Step</button>
+                <button onclick="resetSim()" class="danger">Reset</button>
+            </div>
+            <div class="speed-control">
+                <span>Slow</span>
+                <input type="range" id="speedSlider" min="1" max="10" value="3" step="1" oninput="updateSpeed()" />
+                <span>Fast</span>
+                <span class="speed-label" id="speedLabel">3x</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // main sim engine
+
+        const CONFIG = {
+            squirrel: {
+                maxNests: 25,
+                autumnForageMultiplier: 2.8,
+                baseForageRate: 0.06,
+            },
+            cicada: {
+                emergenceThreshold: 1.5,
+                matingTemp: 24,
+                adultLifespan: 35,
+                initialNymphDensity: 1.2,
+            },
+            environment: {
+                predatorBase: 0.15,
+            }
+        };
+        const DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+
+        const state = {
+            day: 1,
+            hour: 6,
+            season: 'spring',
+            yearDay: 80,
+            temperature: 14,
+            acornVolume: 0.65,
+            treeSap: 0.60,
+            canopyDensity: 0.88,
+            soilMoisture: 0.72,
+            predatorPressure: 0.15,
+            frostEvent: false,
+            squirrel: {
+                population: 48,
+                nestsOccupied: 14,
+                maxNests: 25,
+                acornCache: 210,
+                winterSurvival: 0.92,
+                activeForaging: 0,
+                predatorEncounters: 0,
+                mortalityToday: 0,
+                birthsToday: 0,
+                _cachedAcornsThisAutumn: 0,
+                _nestCompetition: 0,
+            },
+            cicada: {
+                adultPopulation: 0,
+                nymphDensity: 1.2,
+                matingActive: false,
+                emergenceTriggered: false,
+                daysSinceEmergence: 0,
+                frostKill: false,
+                _emergenceDay: -1,
+                _singingTemp: false,
+            },
+            chartData: { squirrel: [], cicada: [], maxPoints: 120 },
+            running: true,
+            speed: 3,
+            tickTimer: null,
+            tickCount: 0,
+        };
+
+        const $ = id => document.getElementById(id);
+        const dom = {
+            dayDisplay: $('dayDisplay'),
+            seasonDisplay: $('seasonDisplay'),
+            tempDisplay: $('tempDisplay'),
+            timeDisplay: $('timeDisplay'),
+            acornPct: $('acornPct'),
+            acornFill: $('acornFill'),
+            acornVal: $('acornVal'),
+            sapPct: $('sapPct'),
+            sapFill: $('sapFill'),
+            sapVal: $('sapVal'),
+            canopyPct: $('canopyPct'),
+            canopyFill: $('canopyFill'),
+            canopyVal: $('canopyVal'),
+            moistPct: $('moistPct'),
+            moistFill: $('moistFill'),
+            moistVal: $('moistVal'),
+            predPct: $('predPct'),
+            predFill: $('predFill'),
+            predVal: $('predVal'),
+            squirrelPop: $('squirrelPop'),
+            squirrelNests: $('squirrelNests'),
+            squirrelCache: $('squirrelCache'),
+            squirrelSurvival: $('squirrelSurvival'),
+            squirrelActive: $('squirrelActive'),
+            squirrelPred: $('squirrelPred'),
+            squirrelStatus: $('squirrelStatus'),
+            cicadaAdult: $('cicadaAdult'),
+            cicadaNymph: $('cicadaNymph'),
+            cicadaMating: $('cicadaMating'),
+            cicadaEmerge: $('cicadaEmerge'),
+            cicadaDays: $('cicadaDays'),
+            cicadaFrost: $('cicadaFrost'),
+            cicadaStatus: $('cicadaStatus'),
+            alertBanner: $('alertBanner'),
+            alertMessage: $('alertMessage'),
+            chartLatestDay: $('chartLatestDay'),
+            playBtn: $('playBtn'),
+            speedLabel: $('speedLabel'),
+            speedSlider: $('speedSlider'),
+        };
+        const canvas = $('populationChart');
+        const ctx = canvas.getContext('2d');
+
+        function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
+        function lerp(a, b, t) { return a + (b - a) * t; }
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+        function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
+
+        function getSeason(dayOfYear) {
+            const d = dayOfYear % 365;
+            if (d < 80) return 'winter';
+            if (d < 172) return 'spring';
+            if (d < 264) return 'summer';
+            if (d < 355) return 'autumn';
+            return 'winter';
+        }
+
+        function getSeasonName(season) {
+            return { spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' } [season] || 'Spring';
+        }
+
+        function getDayLength(dayOfYear) {
+            const d = (dayOfYear % 365) / 365 * 2 * Math.PI;
+            return 12 + 4.5 * Math.sin(d - 0.4);
+        }
+
+        function getTemperature(dayOfYear, hour) {
+            const d = (dayOfYear % 365) / 365 * 2 * Math.PI;
+            const base = 12 + 18 * Math.sin(d - 0.8);
+            const diurnal = 5 * Math.sin((hour / 24) * 2 * Math.PI - 1.2);
+            return clamp(base + diurnal + rand(-0.6, 0.6), -4, 38);
+        }
+
+        function isDaytime(hour, dayOfYear) {
+            const length = getDayLength(dayOfYear);
+            const sunrise = 12 - length / 2;
+            const sunset = 12 + length / 2;
+            return hour >= sunrise && hour <= sunset;
+        }
+
+        function updateConfig(category, key, value, displayId) {
+            const num = parseFloat(value);
+            CONFIG[category][key] = num;
+            if (displayId) $(displayId).textContent = num;
+        }
+
+        function toggleSettings() {
+            const panel = $('settingsPanel');
+            panel.classList.toggle('open');
+        }
+
+        // enviroment upd8
+        function updateEnvironment() {
+            const d = state.yearDay;
+            let acornBase = 0.4 + 0.5 * Math.sin(((d - 80) / 365) * 2 * Math.PI - 0.2);
+            acornBase = clamp(acornBase, 0.15, 0.95);
+            state.acornVolume = clamp(state.acornVolume + (acornBase - state.acornVolume) * 0.02 + rand(-0.01, 0.01), 0.05, 1);
+
+            let sapBase = 0.5 + 0.4 * Math.sin(((d - 60) / 365) * 2 * Math.PI + 0.5);
+            sapBase = clamp(sapBase, 0.10, 0.90);
+            state.treeSap = clamp(state.treeSap + (sapBase - state.treeSap) * 0.015 + rand(-0.008, 0.008), 0.05, 1);
+
+            let canopyBase = 0.6 + 0.35 * Math.sin(((d - 100) / 365) * 2 * Math.PI - 0.3);
+            canopyBase = clamp(canopyBase, 0.20, 0.98);
+            state.canopyDensity = clamp(state.canopyDensity + (canopyBase - state.canopyDensity) * 0.01 + rand(-0.005, 0.005),
+                0.15, 1);
+
+            let moistBase = 0.5 + 0.3 * Math.sin(((d - 120) / 365) * 2 * Math.PI + 0.8);
+            moistBase = clamp(moistBase, 0.20, 0.95);
+            state.soilMoisture = clamp(state.soilMoisture + (moistBase - state.soilMoisture) * 0.01 + rand(-0.01, 0.01), 0.10,
+            1);
+
+            let predBase = CONFIG.environment.predatorBase + 0.08 * Math.sin(((d - 150) / 365) * 2 * Math.PI + 0.1);
+            predBase = clamp(predBase, 0.01, 0.55);
+            state.predatorPressure = clamp(state.predatorPressure + (predBase - state.predatorPressure) * 0.02 + rand(-0.005,
+                0.005), 0.01, 0.60);
+        }
+
+        function checkFrost() {
+            if ((state.season === 'autumn' || state.season === 'winter') && state.temperature < 0) {
+                if (!state.frostEvent) {
+                    state.frostEvent = true;
+                    if (state.cicada.adultPopulation > 0) {
+                        state.cicada.adultPopulation = 0;
+                        state.cicada.frostKill = true;
+                        state.cicada.emergenceTriggered = false;
+                        state.cicada.daysSinceEmergence = 0;
+                        showAlert('First autumn frost! All cicada adults have perished.', 'warning');
+                    }
+                }
+            } else {
+                state.frostEvent = false;
+            }
+        }
+
+        // squirl foragin and nest comptition
+        function updateSquirrels() {
+            const s = state.squirrel;
+            const dayTime = isDaytime(state.hour, state.yearDay);
+            const season = state.season;
+            const cfg = CONFIG.squirrel;
+
+            if (dayTime) {
+                s.activeForaging = Math.round(s.population * (0.5 + 0.4 * Math.sin((state.hour / 24) * 2 * Math.PI - 0.8)));
+                s.activeForaging = clamp(s.activeForaging, 0, s.population);
+                dom.squirrelStatus.textContent = 'active';
+            } else {
+                s.activeForaging = 0;
+                dom.squirrelStatus.textContent = 'inactive';
+            }
+
+            const nestDemand = s.population / 2.5;
+            s._nestCompetition = clamp(nestDemand / cfg.maxNests, 0, 1.5);
+            const nestStress = Math.max(0, s._nestCompetition - 0.9);
+
+            const isAutumn = season === 'autumn';
+            let forageRate = cfg.baseForageRate * (state.acornVolume * 1.2) * (dayTime ? 1 : 0);
+            if (isAutumn) forageRate *= cfg.autumnForageMultiplier;
+            if (season === 'spring') forageRate *= 0.9;
+            if (season === 'summer') forageRate *= 0.7;
+
+            const cacheGain = s.activeForaging * forageRate * 0.3;
+            s.acornCache = clamp(s.acornCache + cacheGain, 0, 2000);
+            if (isAutumn) s._cachedAcornsThisAutumn += cacheGain;
+
+            let births = 0;
+            if ((season === 'spring' || season === 'summer') && dayTime && s.population > 5) {
+                const birthRate = 0.035 * (1 - nestStress * 0.3) * (state.acornVolume * 0.8 + 0.2);
+                births = Math.round(s.population * birthRate * 0.5);
+                births = clamp(births, 0, Math.round(s.population * 0.08));
+                s.birthsToday = births;
+            }
+
+            let deaths = 0;
+            const baseMortality = 0.012 + nestStress * 0.03;
+            deaths += Math.round(s.population * baseMortality * 0.4);
+
+            const predRoll = Math.random();
+            if (predRoll < state.predatorPressure * 0.6 && dayTime) {
+                const predKills = Math.round(s.population * (0.01 + state.predatorPressure * 0.06));
+                deaths += predKills;
+                s.predatorEncounters += predKills;
+            }
+
+            if (season === 'winter') {
+                const cachePerSquirrel = s.acornCache / Math.max(s.population, 1);
+                const starvationRisk = Math.max(0, 1 - cachePerSquirrel / 8);
+                const winterDeaths = Math.round(s.population * starvationRisk * 0.04);
+                deaths += winterDeaths;
+                s.winterSurvival = clamp(1 - starvationRisk * 0.5, 0.1, 0.98);
+            } else {
+                s.winterSurvival = clamp(s.winterSurvival + 0.002, 0.1, 0.98);
+            }
+
+            let newPop = s.population + births - deaths;
+            newPop = clamp(Math.round(newPop), 0, 200);
+            s.population = newPop;
+            s.mortalityToday = deaths;
+
+            s.nestsOccupied = Math.min(Math.round(s.population / 2.2), cfg.maxNests);
+            s.nestsOccupied = clamp(s.nestsOccupied, 0, cfg.maxNests);
+
+            if (!isAutumn && state.day % 3 === 0) {
+                s.acornCache = Math.max(0, s.acornCache - 0.4);
+            }
+            if (season === 'winter' && state.hour % 4 < 0.5) {
+                const consume = s.population * 0.06;
+                s.acornCache = Math.max(0, s.acornCache - consume);
+            }
+        }
+
+        // cicada emergance logic
+        function updateCicadas() {
+            const c = state.cicada;
+            const season = state.season;
+            const temp = state.temperature;
+            const dayOfYear = state.yearDay;
+            const cfg = CONFIG.cicada;
+
+            const growthBase = 0.0004 + 0.0008 * Math.sin(((dayOfYear - 140) / 365) * 2 * Math.PI + 0.2);
+            c.nymphDensity = clamp(c.nymphDensity + growthBase * 0.5 + rand(-0.002, 0.002), 0.1, 3.5);
+
+            const isLateSummer = dayOfYear >= 215 && dayOfYear <= 270;
+            const tempWarm = temp > 22;
+            if (isLateSummer && tempWarm && !c.emergenceTriggered && c.nymphDensity > cfg.emergenceThreshold) {
+                const emergeCount = Math.round(c.nymphDensity * 12 + rand(5, 25));
+                c.adultPopulation = clamp(emergeCount, 10, 300);
+                c.emergenceTriggered = true;
+                c.daysSinceEmergence = 0;
+                c._emergenceDay = dayOfYear;
+                c.frostKill = false;
+                c.nymphDensity = clamp(c.nymphDensity * 0.15, 0.1, 3.0);
+                showAlert(`Massive cicada emergence! ${c.adultPopulation} adults appeared.`, 'emerge');
+                dom.cicadaEmerge.textContent = `Day ${dayOfYear}`;
+                document.getElementById('cicadaPanel').classList.add('emerging');
+                setTimeout(() => document.getElementById('cicadaPanel').classList.remove('emerging'), 2500);
+            }
+
+            if (c.emergenceTriggered && c.adultPopulation > 0) {
+                c.daysSinceEmergence++;
+                const canMate = temp > cfg.matingTemp && isDaytime(state.hour, state.yearDay);
+                c.matingActive = canMate;
+                c._singingTemp = temp > cfg.matingTemp;
+
+                const lifespan = cfg.adultLifespan + rand(-5, 5);
+                if (c.daysSinceEmergence > lifespan) {
+                    const dieOff = Math.round(c.adultPopulation * 0.12);
+                    c.adultPopulation = Math.max(0, c.adultPopulation - dieOff);
+                }
+                if (temp < 10 && c.adultPopulation > 0) {
+                    const coldKill = Math.round(c.adultPopulation * 0.05);
+                    c.adultPopulation = Math.max(0, c.adultPopulation - coldKill);
+                }
+                if (c.adultPopulation <= 0) {
+                    c.adultPopulation = 0;
+                    c.emergenceTriggered = false;
+                    c.daysSinceEmergence = 0;
+                    c.matingActive = false;
+                    dom.cicadaEmerge.textContent = '—';
+                }
+                if (state.frostEvent && c.adultPopulation > 0) {
+                    c.adultPopulation = 0;
+                    c.emergenceTriggered = false;
+                    c.daysSinceEmergence = 0;
+                    c.frostKill = true;
+                }
+            } else {
+                c.matingActive = false;
+            }
+
+            if (c.adultPopulation > 0) {
+                dom.cicadaStatus.textContent = c.matingActive ? 'singing' : 'active';
+                dom.cicadaStatus.style.color = c.matingActive ? '#7ac47a' : '#e8c87a';
+            } else if (c.emergenceTriggered) {
+                dom.cicadaStatus.textContent = 'emerging';
+                dom.cicadaStatus.style.color = '#e8c87a';
+            } else {
+                dom.cicadaStatus.textContent = 'dormant';
+                dom.cicadaStatus.style.color = 'var(--text-muted)';
+            }
+        }
+
+        function showAlert(msg, type) {
+            dom.alertMessage.textContent = msg;
+            dom.alertBanner.classList.add('show');
+            if (type === 'emerge') {
+                dom.alertBanner.style.borderColor = 'rgba(120,200,120,0.4)';
+                dom.alertBanner.style.background = 'rgba(120,200,120,0.08)';
+            } else {
+                dom.alertBanner.style.borderColor = 'rgba(200,80,70,0.15)';
+                dom.alertBanner.style.background = 'rgba(200,80,70,0.08)';
+            }
+            clearTimeout(window._alertTimeout);
+            window._alertTimeout = setTimeout(() => dom.alertBanner.classList.remove('show'), 5000);
+        }
+
+        function recordDataPoint() {
+            const sd = state.chartData;
+            sd.squirrel.push(state.squirrel.population);
+            sd.cicada.push(state.cicada.adultPopulation);
+            if (sd.squirrel.length > sd.maxPoints) {
+                sd.squirrel.shift();
+                sd.cicada.shift();
+            }
+        }
+
+        function tick() {
+            state.tickCount++;
+            state.hour += 0.5;
+            if (state.hour >= 24) {
+                state.hour -= 24;
+                state.day++;
+                state.yearDay++;
+                if (state.yearDay > 365) state.yearDay = 1;
+                state.season = getSeason(state.yearDay);
+                recordDataPoint();
+                state.squirrel.predatorEncounters = 0;
+                state.squirrel.mortalityToday = 0;
+                state.squirrel.birthsToday = 0;
+                checkFrost();
+            }
+            state.temperature = getTemperature(state.yearDay, state.hour);
+            updateEnvironment();
+            updateSquirrels();
+            updateCicadas();
+            updateUI();
+            drawChart();
+            if (state.tickCount % 6 === 0) {
+                dom.alertBanner.classList.remove('show');
+            }
+        }
+
+        function updateUI() {
+            const d = state;
+            const s = d.squirrel;
+            const c = d.cicada;
+
+            dom.dayDisplay.textContent = d.day;
+            dom.seasonDisplay.textContent = getSeasonName(d.season);
+            dom.tempDisplay.textContent = Math.round(d.temperature) + ' C';
+            const hours = Math.floor(d.hour);
+            const mins = Math.round((d.hour - hours) * 60);
+            dom.timeDisplay.textContent =
+                `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+
+            const acornPct = Math.round(d.acornVolume * 100);
+            dom.acornPct.textContent = acornPct + '%';
+            dom.acornFill.style.width = acornPct + '%';
+            dom.acornVal.textContent = Math.round(d.acornVolume * 120);
+
+            const sapPct = Math.round(d.treeSap * 100);
+            dom.sapPct.textContent = sapPct + '%';
+            dom.sapFill.style.width = sapPct + '%';
+            dom.sapVal.textContent = Math.round(d.treeSap * 80);
+
+            const canopyPct = Math.round(d.canopyDensity * 100);
+            dom.canopyPct.textContent = canopyPct + '%';
+            dom.canopyFill.style.width = canopyPct + '%';
+            dom.canopyVal.textContent = canopyPct;
+
+            const moistPct = Math.round(d.soilMoisture * 100);
+            dom.moistPct.textContent = moistPct + '%';
+            dom.moistFill.style.width = moistPct + '%';
+            dom.moistVal.textContent = moistPct;
+
+            const predPct = Math.round(d.predatorPressure * 100);
+            dom.predPct.textContent = predPct + '%';
+            dom.predFill.style.width = predPct + '%';
+            dom.predVal.textContent = Math.round(d.predatorPressure * 8);
+
+            dom.squirrelPop.textContent = s.population;
+            dom.squirrelNests.textContent = `${s.nestsOccupied} / ${s.maxNests}`;
+            dom.squirrelCache.textContent = Math.round(s.acornCache);
+            dom.squirrelSurvival.textContent = Math.round(s.winterSurvival * 100) + '%';
+            dom.squirrelActive.textContent = s.activeForaging;
+            dom.squirrelPred.textContent = s.predatorEncounters;
+
+            dom.cicadaAdult.textContent = c.adultPopulation;
+            dom.cicadaNymph.textContent = c.nymphDensity.toFixed(1) + 'M / m²';
+            dom.cicadaMating.textContent = c.matingActive ? 'active' : 'inactive';
+            dom.cicadaMating.style.color = c.matingActive ? '#7ac47a' : 'var(--text-muted)';
+            dom.cicadaDays.textContent = c.emergenceTriggered ? c.daysSinceEmergence + ' days' : '—';
+            dom.cicadaFrost.textContent = c.frostKill ? 'killed' : 'none';
+            dom.cicadaFrost.style.color = c.frostKill ? '#e8877a' : 'var(--text-muted)';
+
+            const sd = d.chartData;
+            if (sd.squirrel.length > 0) {
+                dom.chartLatestDay.textContent = `Day ${d.day}`;
+            }
+        }
+
+        // draw the chart lol
+        function drawChart() {
+            const W = canvas.clientWidth || canvas.width;
+            const H = canvas.clientHeight || canvas.height;
+            canvas.width = W;
+            canvas.height = H;
+
+            const sd = state.chartData;
+            const sqData = sd.squirrel;
+            const ciData = sd.cicada;
+            const len = sqData.length;
+
+            ctx.clearRect(0, 0, W, H);
+            if (len < 2) {
+                ctx.fillStyle = 'rgba(255,255,255,0.08)';
+                ctx.font = '14px var(--font)';
+                ctx.textAlign = 'center';
+                ctx.fillText('Waiting for data…', W / 2, H / 2);
+                return;
+            }
+
+            const pad = { top: 14, bottom: 16, left: 8, right: 10 };
+            const chartW = W - pad.left - pad.right;
+            const chartH = H - pad.top - pad.bottom;
+            const allVals = [...sqData, ...ciData];
+            const maxVal = Math.max(1, ...allVals) * 1.15;
+            const xScale = chartW / (len - 1);
+            const yScale = chartH / maxVal;
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 4; i++) {
+                const y = pad.top + chartH - (i / 3) * chartH;
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(pad.left + chartW, y);
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(255,255,255,0.12)';
+                ctx.font = '8px var(--font)';
+                ctx.textAlign = 'right';
+                ctx.fillText(Math.round((i / 3) * maxVal), pad.left - 4, y + 3);
+            }
+
+            drawLine(sqData, '#b8956a', 2.2);
+            drawLine(ciData, '#7fb07a', 2.2);
+
+            ctx.beginPath();
+            ctx.moveTo(pad.left, pad.top + chartH);
+            for (let i = 0; i < len; i++) {
+                const x = pad.left + i * xScale;
+                const y = pad.top + chartH - sqData[i] * yScale;
+                if (i === 0) ctx.lineTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.lineTo(pad.left + (len - 1) * xScale, pad.top + chartH);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(184,149,106,0.08)';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(pad.left, pad.top + chartH);
+            for (let i = 0; i < len; i++) {
+                const x = pad.left + i * xScale;
+                const y = pad.top + chartH - ciData[i] * yScale;
+                if (i === 0) ctx.lineTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.lineTo(pad.left + (len - 1) * xScale, pad.top + chartH);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(127,176,122,0.08)';
+            ctx.fill();
+
+            if (len > 0) {
+                const lastIdx = len - 1;
+                const xLast = pad.left + lastIdx * xScale;
+                const ySq = pad.top + chartH - sqData[lastIdx] * yScale;
+                ctx.beginPath();
+                ctx.arc(xLast, ySq, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = '#b8956a';
+                ctx.fill();
+
+                const yCi = pad.top + chartH - ciData[lastIdx] * yScale;
+                ctx.beginPath();
+                ctx.arc(xLast, yCi, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = '#7fb07a';
+                ctx.fill();
+            }
+
+            function drawLine(data, color, width) {
+                if (data.length < 2) return;
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = width;
+                for (let i = 0; i < data.length; i++) {
+                    const x = pad.left + i * xScale;
+                    const y = pad.top + chartH - data[i] * yScale;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function syncSlidersFromConfig() {
+            const map = {
+                'slider_maxNests': ['squirrel', 'maxNests', 'val_maxNests'],
+                'slider_autumnForage': ['squirrel', 'autumnForageMultiplier', 'val_autumnForage'],
+                'slider_baseForage': ['squirrel', 'baseForageRate', 'val_baseForage'],
+                'slider_predBase': ['environment', 'predatorBase', 'val_predBase'],
+                'slider_emergeThresh': ['cicada', 'emergenceThreshold', 'val_emergeThresh'],
+                'slider_matingTemp': ['cicada', 'matingTemp', 'val_matingTemp'],
+                'slider_lifespan': ['cicada', 'adultLifespan', 'val_lifespan'],
+                'slider_initNymph': ['cicada', 'initialNymphDensity', 'val_initNymph'],
+            };
+            for (const [sliderId, [cat, key, displayId]] of Object.entries(map)) {
+                const slider = $(sliderId);
+                const val = CONFIG[cat][key];
+                slider.value = val;
+                if (displayId) $(displayId).textContent = val;
+            }
+        }
+
+        function initSim() {
+            state.squirrel.maxNests = CONFIG.squirrel.maxNests;
+            state.cicada.nymphDensity = CONFIG.cicada.initialNymphDensity;
+
+            state.day = 1;
+            state.yearDay = 80;
+            state.hour = 6;
+            state.season = 'spring';
+            state.temperature = getTemperature(state.yearDay, state.hour);
+            state.frostEvent = false;
+
+            const s = state.squirrel;
+            s.population = 48;
+            s.nestsOccupied = Math.min(Math.round(48 / 2.2), s.maxNests);
+            s.acornCache = 210;
+            s.winterSurvival = 0.92;
+            s.activeForaging = 0;
+            s.predatorEncounters = 0;
+            s.mortalityToday = 0;
+            s.birthsToday = 0;
+            s._cachedAcornsThisAutumn = 0;
+            s._nestCompetition = 0;
+
+            const c = state.cicada;
+            c.adultPopulation = 0;
+            c.nymphDensity = CONFIG.cicada.initialNymphDensity;
+            c.matingActive = false;
+            c.emergenceTriggered = false;
+            c.daysSinceEmergence = 0;
+            c.frostKill = false;
+            c._emergenceDay = -1;
+            c._singingTemp = false;
+
+            state.chartData.squirrel = [];
+            state.chartData.cicada = [];
+            state.running = true;
+            state.tickCount = 0;
+
+            dom.playBtn.textContent = 'Pause';
+            dom.alertBanner.classList.remove('show');
+            document.querySelectorAll('.emerging').forEach(el => el.classList.remove('emerging'));
+
+            recordDataPoint();
+            updateUI();
+            drawChart();
+            syncSlidersFromConfig();
+        }
+
+        function togglePlay() {
+            state.running = !state.running;
+            dom.playBtn.textContent = state.running ? 'Pause' : 'Play';
+            if (state.running) startLoop();
+            else stopLoop();
+        }
+
+        function stepOnce() { if (!state.running) tick(); }
+
+        function resetSim() {
+            stopLoop();
+            for (const [cat, vals] of Object.entries(DEFAULTS)) {
+                for (const [key, val] of Object.entries(vals)) {
+                    CONFIG[cat][key] = val;
+                }
+            }
+            initSim();
+            syncSlidersFromConfig();
+            if (state.running) startLoop();
+        }
+
+        function updateSpeed() {
+            const val = parseInt(dom.speedSlider.value);
+            state.speed = val;
+            dom.speedLabel.textContent = val + 'x';
+            if (state.running) { stopLoop();
+                startLoop(); }
+        }
+
+        let loopInterval = null;
+
+        function startLoop() {
+            stopLoop();
+            const interval = Math.max(50, 1000 / state.speed);
+            loopInterval = setInterval(() => { if (state.running) tick(); }, interval);
+        }
+
+        function stopLoop() { if (loopInterval) { clearInterval(loopInterval);
+                loopInterval = null; } }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => drawChart(), 100);
+        });
+
+        initSim();
+        startLoop();
+
+        window.togglePlay = togglePlay;
+        window.stepOnce = stepOnce;
+        window.resetSim = resetSim;
+        window.updateSpeed = updateSpeed;
+        window.toggleSettings = toggleSettings;
+        window.updateConfig = updateConfig;
+    </script>
+
+</body>
+</html>
