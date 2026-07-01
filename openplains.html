@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://shashank-viswanathan.github.io/Eco-West-Windsor/openplains.html" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z6WVJ5BMB3"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Plains — Configurable Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* sharp edges on all boxes */
+        * {
+            border-radius: 0 !important;
+        }
+        /* keep slider thumbs round */
+        input[type="range"]::-webkit-slider-thumb,
+        input[type="range"]::-moz-range-thumb {
+            border-radius: 50% !important;
+        }
+
+        :root {
+            --bg-dark: #1e2218;
+            --panel-bg: rgba(30, 34, 24, 0.95);
+            --border-color: rgba(160, 150, 130, 0.15);
+            --text-light: #e0ddd0;
+            --text-muted: #9a8e7a;
+            --accent-primary: #7a9a6a;
+            --accent-secondary: #b09060;
+            --accent-highlight: #d4b080;
+            --accent-warm: #c08050;
+            --accent-cool: #6a8a7a;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s ease;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(120, 140, 100, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(160, 140, 100, 0.04) 0%, transparent 50%);
+        }
+
+        .sim-container {
+            width: 100%;
+            max-width: 1360px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(4px);
+            padding: 22px 28px 28px;
+            box-shadow: none;
+            border: 1px solid var(--border-color);
+            transition: opacity 0.4s ease;
+            margin-top: 0;
+        }
+
+        .sim-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sim-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-primary);
+        }
+        .sim-header h1 span {
+            background: rgba(122, 154, 106, 0.15);
+            padding: 2px 12px;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+        .header-stats .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 14px 4px 12px;
+            border: 1px solid var(--border-color);
+        }
+        .header-stats .stat-item .label {
+            color: var(--text-muted);
+        }
+        .header-stats .stat-item .value {
+            font-weight: 600;
+            color: #d8d0c0;
+        }
+        .season-badge {
+            background: #2a2e24;
+            padding: 2px 16px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .settings-toggle {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 4px 16px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font);
+            margin-left: 10px;
+        }
+        .settings-toggle:hover {
+            background: rgba(122, 154, 106, 0.12);
+            border-color: var(--accent-primary);
+        }
+
+        .settings-panel {
+            display: none;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 16px 20px 20px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border-color);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px 30px;
+            transition: all 0.3s ease;
+        }
+        .settings-panel.open {
+            display: grid;
+        }
+        .settings-panel .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .settings-panel .setting-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+        .settings-panel .setting-group label .val {
+            color: var(--accent-secondary);
+            font-weight: 600;
+        }
+        .settings-panel input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.06);
+            height: 4px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .settings-panel input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--accent-primary);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .settings-panel input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: var(--accent-primary);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .metric-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px 10px;
+            border: 1px solid var(--border-color);
+            transition: border var(--transition);
+        }
+        .metric-card:hover {
+            border-color: rgba(122, 154, 106, 0.25);
+        }
+        .metric-card .metric-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+        .metric-card .metric-bar {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+            margin-top: 2px;
+        }
+        .metric-card .metric-bar .fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.6s ease;
+            background: linear-gradient(90deg, var(--accent-secondary), var(--accent-primary));
+        }
+        .metric-card .metric-value {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 2px;
+            color: #d0c8b8;
+        }
+        .metric-card .metric-value small {
+            font-weight: 300;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 22px;
+            margin-top: 4px;
+        }
+
+        .chart-panel {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 14px 16px 16px;
+            border: 1px solid var(--border-color);
+        }
+        .chart-panel .chart-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chart-panel .chart-title .legend {
+            display: flex;
+            gap: 14px;
+            font-size: 0.7rem;
+        }
+        .chart-panel .chart-title .legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chart-panel .chart-title .legend .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+        }
+        .dot-cottontail {
+            background: var(--accent-secondary);
+        }
+        .dot-cicada {
+            background: var(--accent-warm);
+        }
+
+        #populationChart {
+            width: 100%;
+            height: 180px;
+            display: block;
+            background: rgba(0, 0, 0, 0.20);
+        }
+
+        .species-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .species-panel {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 12px 14px 14px;
+            border: 1px solid var(--border-color);
+            transition: border var(--transition);
+        }
+        .species-panel:hover {
+            border-color: rgba(122, 154, 106, 0.15);
+        }
+        .species-panel .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .species-panel .panel-head h3 {
+            font-size: 1.0rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #d0c8b8;
+        }
+        .species-panel .panel-head .badge {
+            font-size: 0.6rem;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 2px 10px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+        .species-panel .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px 12px;
+            margin-top: 2px;
+        }
+        .species-panel .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .species-panel .stat-row .s-label {
+            color: var(--text-muted);
+        }
+        .species-panel .stat-row .s-value {
+            font-weight: 500;
+            color: #c8c0b0;
+        }
+        .species-panel .stat-row .s-value.danger {
+            color: #d07060;
+        }
+        .species-panel .stat-row .s-value.warning {
+            color: var(--accent-secondary);
+        }
+        .species-panel .stat-row .s-value.success {
+            color: var(--accent-primary);
+        }
+
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+        .controls-row .btn-group {
+            display: flex;
+            gap: 5px;
+        }
+        .controls-row button {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 5px 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font);
+        }
+        .controls-row button:hover {
+            background: rgba(122, 154, 106, 0.12);
+            border-color: var(--accent-primary);
+            transform: translateY(-1px);
+        }
+        .controls-row button:active {
+            transform: scale(0.97);
+        }
+        .controls-row button.primary {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #1a1a1a;
+        }
+        .controls-row button.primary:hover {
+            background: #8aaa7a;
+            border-color: #8aaa7a;
+        }
+        .controls-row button.danger {
+            border-color: rgba(200, 80, 70, 0.3);
+            color: #d07060;
+        }
+        .controls-row button.danger:hover {
+            background: rgba(200, 80, 70, 0.12);
+        }
+        .controls-row .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .controls-row .speed-control input[type="range"] {
+            width: 70px;
+            accent-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.06);
+            height: 4px;
+            cursor: pointer;
+        }
+        .controls-row .speed-control .speed-label {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .alert-banner {
+            margin-top: 12px;
+            padding: 6px 14px;
+            background: rgba(200, 80, 70, 0.12);
+            border: 1px solid rgba(200, 80, 70, 0.15);
+            color: #d09080;
+            font-size: 0.8rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-banner.show {
+            display: flex;
+        }
+
+        @media (max-width: 920px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .sim-container {
+                padding: 14px 12px 16px;
+            }
+            .sim-header h1 {
+                font-size: 1.3rem;
+            }
+            .settings-panel {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 500px) {
+            .settings-panel {
+                grid-template-columns: 1fr;
+            }
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .controls-row .speed-control {
+                margin-left: 0;
+            }
+            .species-panel .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sim-container" id="app">
+        <header class="sim-header">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;">
+                <h1>
+                    Open Plains
+                    <span>configurable</span>
+                </h1>
+                <button class="settings-toggle" onclick="toggleSettings()">Parameters</button>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item"><span class="label">Day</span><span class="value" id="dayDisplay">1</span></div>
+                <div class="stat-item"><span class="label">Season</span><span class="season-badge" id="seasonDisplay">Spring</span></div>
+                <div class="stat-item"><span class="label">Temp</span><span class="value" id="tempDisplay">14 C</span></div>
+                <div class="stat-item"><span class="label">Time</span><span class="value" id="timeDisplay">06:00</span></div>
+            </div>
+        </header>
+
+        <div class="settings-panel" id="settingsPanel">
+            <!-- Cottontail params -->
+            <div class="setting-group">
+                <label>Burrow Capacity <span class="val" id="val_burrowCap">25</span></label>
+                <input type="range" id="slider_burrowCap" min="5" max="50" value="25" step="1" oninput="updateConfig('cottontail','burrowCapacity', this.value, 'val_burrowCap')">
+            </div>
+            <div class="setting-group">
+                <label>Forage Rate <span class="val" id="val_ctForage">0.09</span></label>
+                <input type="range" id="slider_ctForage" min="0.02" max="0.25" value="0.09" step="0.005" oninput="updateConfig('cottontail','forageRate', this.value, 'val_ctForage')">
+            </div>
+            <div class="setting-group">
+                <label>Predator Pressure <span class="val" id="val_ctPred">0.18</span></label>
+                <input type="range" id="slider_ctPred" min="0.0" max="0.55" value="0.18" step="0.01" oninput="updateConfig('cottontail','predatorBase', this.value, 'val_ctPred')">
+            </div>
+            <!-- Cicada params -->
+            <div class="setting-group">
+                <label>Emergence Soil Temp <span class="val" id="val_emergeTemp">18</span></label>
+                <input type="range" id="slider_emergeTemp" min="12" max="28" value="18" step="1" oninput="updateConfig('cicada','emergenceTemp', this.value, 'val_emergeTemp')">
+            </div>
+            <div class="setting-group">
+                <label>Nymph Density <span class="val" id="val_nymphDensity">0.8</span></label>
+                <input type="range" id="slider_nymphDensity" min="0.2" max="2.5" value="0.8" step="0.1" oninput="updateConfig('cicada','nymphDensity', this.value, 'val_nymphDensity')">
+            </div>
+            <div class="setting-group">
+                <label>Adult Lifespan <span class="val" id="val_lifespan">30</span></label>
+                <input type="range" id="slider_lifespan" min="10" max="60" value="30" step="1" oninput="updateConfig('cicada','adultLifespan', this.value, 'val_lifespan')">
+            </div>
+        </div>
+
+        <div class="metrics-row" id="metricsRow">
+            <div class="metric-card"><div class="metric-label"><span>Grass Coverage</span><span id="grassPct">0%</span></div><div class="metric-bar"><div class="fill" id="grassFill" style="width:0%"></div></div><div class="metric-value"><span id="grassVal">0</span> <small>%</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Brush Coverage</span><span id="brushPct">0%</span></div><div class="metric-bar"><div class="fill" id="brushFill" style="width:0%"></div></div><div class="metric-value"><span id="brushVal">0</span> <small>%</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Soil Temperature</span><span id="soilPct">0%</span></div><div class="metric-bar"><div class="fill" id="soilFill" style="width:0%"></div></div><div class="metric-value"><span id="soilVal">0</span> <small>C</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Fire Risk</span><span id="firePct">0%</span></div><div class="metric-bar"><div class="fill" id="fireFill" style="width:0%; background:linear-gradient(90deg,#b08040,#d06020)"></div></div><div class="metric-value"><span id="fireVal">0</span> <small>%</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Predator Pressure</span><span id="predPct">0%</span></div><div class="metric-bar"><div class="fill" id="predFill" style="width:0%; background:linear-gradient(90deg,#a06050,#d08070)"></div></div><div class="metric-value"><span id="predVal">0</span> <small>nearby</small></div></div>
+        </div>
+
+        <div class="main-grid">
+            <div class="chart-panel">
+                <div class="chart-title">
+                    <span>Population Over Time</span>
+                    <div class="legend">
+                        <span><span class="dot dot-cottontail"></span> Cottontail</span>
+                        <span><span class="dot dot-cicada"></span> Cicada</span>
+                    </div>
+                </div>
+                <canvas id="populationChart" width="600" height="180"></canvas>
+                <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-muted);margin-top:2px;"><span>Day 1</span><span id="chartLatestDay">Day 1</span></div>
+            </div>
+
+            <div class="species-stack">
+                <!-- Cottontail -->
+                <div class="species-panel" id="cottontailPanel">
+                    <div class="panel-head"><h3>Eastern Cottontail</h3><span class="badge" id="ctStatus">inactive</span></div>
+                    <div class="stats-grid">
+                        <div class="stat-row"><span class="s-label">Population</span><span class="s-value" id="ctPop">35</span></div>
+                        <div class="stat-row"><span class="s-label">Burrows Used</span><span class="s-value" id="ctBurrows">10 / 25</span></div>
+                        <div class="stat-row"><span class="s-label">Forage Intake</span><span class="s-value" id="ctForage">0</span></div>
+                        <div class="stat-row"><span class="s-label">Winter Survival</span><span class="s-value" id="ctSurvival">82%</span></div>
+                        <div class="stat-row"><span class="s-label">Active Foraging</span><span class="s-value" id="ctActive">0</span></div>
+                        <div class="stat-row"><span class="s-label">Predator Encounters</span><span class="s-value" id="ctPred">0</span></div>
+                    </div>
+                </div>
+
+                <!-- Cicada -->
+                <div class="species-panel" id="cicadaPanel">
+                    <div class="panel-head"><h3>Lyric Cicada</h3><span class="badge" id="cicadaStatus">dormant</span></div>
+                    <div class="stats-grid">
+                        <div class="stat-row"><span class="s-label">Adult Population</span><span class="s-value" id="ciAdult">0</span></div>
+                        <div class="stat-row"><span class="s-label">Nymph Density</span><span class="s-value" id="ciNymph">0.8M / m²</span></div>
+                        <div class="stat-row"><span class="s-label">Emergence</span><span class="s-value" id="ciEmerge">—</span></div>
+                        <div class="stat-row"><span class="s-label">Days Active</span><span class="s-value" id="ciDays">—</span></div>
+                        <div class="stat-row"><span class="s-label">Soil Temp Trigger</span><span class="s-value" id="ciSoil">18 C</span></div>
+                        <div class="stat-row"><span class="s-label">Frost Kill</span><span class="s-value" id="ciFrost">none</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-banner" id="alertBanner"><span class="icon"></span><span id="alertMessage">Alert</span></div>
+
+        <div class="controls-row">
+            <div class="btn-group">
+                <button id="playBtn" class="primary" onclick="togglePlay()">Pause</button>
+                <button onclick="stepOnce()">Step</button>
+                <button onclick="resetSim()" class="danger">Reset</button>
+            </div>
+            <div class="speed-control">
+                <span>Slow</span>
+                <input type="range" id="speedSlider" min="1" max="10" value="3" step="1" oninput="updateSpeed()" />
+                <span>Fast</span>
+                <span class="speed-label" id="speedLabel">3x</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // open plains sim engine – cottontail + cicada only
+
+        const CONFIG = {
+            cottontail: {
+                burrowCapacity: 25,
+                forageRate: 0.09,
+                predatorBase: 0.18,
+            },
+            cicada: {
+                emergenceTemp: 18,
+                nymphDensity: 0.8,
+                adultLifespan: 30,
+            }
+        };
+        const DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+
+        const state = {
+            day: 1,
+            hour: 6,
+            season: 'spring',
+            yearDay: 80,
+            temperature: 14,
+            soilTemp: 12,
+            grassCoverage: 0.65,
+            brushCoverage: 0.20,
+            fireRisk: 0.05,
+            predatorPressure: 0.18,
+            frostEvent: false,
+            cottontail: {
+                population: 35,
+                burrowsUsed: 10,
+                maxBurrows: 25,
+                forageIntake: 0,
+                winterSurvival: 0.82,
+                activeForaging: 0,
+                predatorEncounters: 0,
+                mortalityToday: 0,
+                birthsToday: 0,
+                _burrowCompetition: 0,
+            },
+            cicada: {
+                adultPopulation: 0,
+                nymphDensity: 0.8,
+                emergenceTriggered: false,
+                daysActive: 0,
+                frostKill: false,
+                _emergenceDay: -1,
+            },
+            chartData: { cottontail: [], cicada: [], maxPoints: 120 },
+            running: true,
+            speed: 3,
+            tickTimer: null,
+            tickCount: 0,
+        };
+
+        const $ = id => document.getElementById(id);
+        const dom = {
+            dayDisplay: $('dayDisplay'),
+            seasonDisplay: $('seasonDisplay'),
+            tempDisplay: $('tempDisplay'),
+            timeDisplay: $('timeDisplay'),
+            grassPct: $('grassPct'),
+            grassFill: $('grassFill'),
+            grassVal: $('grassVal'),
+            brushPct: $('brushPct'),
+            brushFill: $('brushFill'),
+            brushVal: $('brushVal'),
+            soilPct: $('soilPct'),
+            soilFill: $('soilFill'),
+            soilVal: $('soilVal'),
+            firePct: $('firePct'),
+            fireFill: $('fireFill'),
+            fireVal: $('fireVal'),
+            predPct: $('predPct'),
+            predFill: $('predFill'),
+            predVal: $('predVal'),
+            ctPop: $('ctPop'),
+            ctBurrows: $('ctBurrows'),
+            ctForage: $('ctForage'),
+            ctSurvival: $('ctSurvival'),
+            ctActive: $('ctActive'),
+            ctPred: $('ctPred'),
+            ctStatus: $('ctStatus'),
+            ciAdult: $('ciAdult'),
+            ciNymph: $('ciNymph'),
+            ciEmerge: $('ciEmerge'),
+            ciDays: $('ciDays'),
+            ciSoil: $('ciSoil'),
+            ciFrost: $('ciFrost'),
+            cicadaStatus: $('cicadaStatus'),
+            alertBanner: $('alertBanner'),
+            alertMessage: $('alertMessage'),
+            chartLatestDay: $('chartLatestDay'),
+            playBtn: $('playBtn'),
+            speedLabel: $('speedLabel'),
+            speedSlider: $('speedSlider'),
+        };
+        const canvas = $('populationChart');
+        const ctx = canvas.getContext('2d');
+
+        function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+        function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
+
+        function getSeason(dayOfYear) {
+            const d = dayOfYear % 365;
+            if (d < 80) return 'winter';
+            if (d < 172) return 'spring';
+            if (d < 264) return 'summer';
+            if (d < 355) return 'autumn';
+            return 'winter';
+        }
+        function getSeasonName(s) { return { spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' } [s] ||
+                'Spring'; }
+
+        function getDayLength(d) { return 12 + 4.5 * Math.sin(((d % 365) / 365) * 2 * Math.PI - 0.4); }
+
+        function getTemperature(dayOfYear, hour) {
+            const d = (dayOfYear % 365) / 365 * 2 * Math.PI;
+            const base = 12 + 18 * Math.sin(d - 0.8);
+            const diurnal = 5 * Math.sin((hour / 24) * 2 * Math.PI - 1.2);
+            return clamp(base + diurnal + rand(-0.6, 0.6), -4, 38);
+        }
+
+        function isDaytime(hour, dayOfYear) {
+            const length = getDayLength(dayOfYear);
+            const sunrise = 12 - length / 2;
+            const sunset = 12 + length / 2;
+            return hour >= sunrise && hour <= sunset;
+        }
+
+        function updateConfig(cat, key, value, displayId) {
+            const num = parseFloat(value);
+            CONFIG[cat][key] = num;
+            if (displayId) $(displayId).textContent = num;
+        }
+
+        function toggleSettings() {
+            document.getElementById('settingsPanel').classList.toggle('open');
+        }
+
+        // ---- environment ----
+        function updateEnvironment() {
+            const d = state.yearDay;
+            let grassBase = 0.5 + 0.35 * Math.sin(((d - 120) / 365) * 2 * Math.PI + 0.2);
+            grassBase = clamp(grassBase, 0.15, 0.95);
+            state.grassCoverage = clamp(state.grassCoverage + (grassBase - state.grassCoverage) * 0.02 + rand(-0.01, 0.01), 0.1,
+                1);
+            state.brushCoverage = clamp(0.3 - state.grassCoverage * 0.3 + rand(-0.03, 0.03), 0.02, 0.5);
+            state.soilTemp = clamp(state.soilTemp + (state.temperature - state.soilTemp) * 0.02 + rand(-0.2, 0.2), 0, 35);
+            let fireBase = 0.02 + 0.15 * Math.sin(((d - 160) / 365) * 2 * Math.PI + 0.1);
+            fireBase = clamp(fireBase, 0.0, 0.30);
+            state.fireRisk = clamp(state.fireRisk + (fireBase - state.fireRisk) * 0.02 + rand(-0.005, 0.005), 0.0, 0.40);
+            let predBase = 0.12 + 0.08 * Math.sin(((d - 100) / 365) * 2 * Math.PI + 0.4);
+            predBase = clamp(predBase, 0.04, 0.40);
+            state.predatorPressure = clamp(state.predatorPressure + (predBase - state.predatorPressure) * 0.02 + rand(-0.005,
+                0.005), 0.02, 0.50);
+        }
+
+        function checkFrost() {
+            if ((state.season === 'autumn' || state.season === 'winter') && state.temperature < 0) {
+                if (!state.frostEvent) {
+                    state.frostEvent = true;
+                    if (state.cicada.adultPopulation > 0) {
+                        state.cicada.adultPopulation = 0;
+                        state.cicada.frostKill = true;
+                        state.cicada.emergenceTriggered = false;
+                        state.cicada.daysActive = 0;
+                        showAlert('First frost killed all cicada adults.', 'warning');
+                    }
+                }
+            } else {
+                state.frostEvent = false;
+            }
+        }
+
+        // ---- cottontail ----
+        function updateCottontail() {
+            const s = state.cottontail;
+            const dayTime = isDaytime(state.hour, state.yearDay);
+            const season = state.season;
+            const cfg = CONFIG.cottontail;
+
+            if (dayTime) {
+                s.activeForaging = Math.round(s.population * (0.5 + 0.3 * Math.sin((state.hour / 24) * 2 * Math.PI - 1.0)));
+                s.activeForaging = clamp(s.activeForaging, 0, s.population);
+                dom.ctStatus.textContent = 'active';
+            } else {
+                s.activeForaging = 0;
+                dom.ctStatus.textContent = 'inactive';
+            }
+
+            const burrowDemand = s.population / 1.8;
+            s._burrowCompetition = clamp(burrowDemand / cfg.burrowCapacity, 0, 1.5);
+            const burrowStress = Math.max(0, s._burrowCompetition - 0.85);
+
+            const isSpring = season === 'spring';
+            const isSummer = season === 'summer';
+            const isAutumn = season === 'autumn';
+            let forageRate = cfg.forageRate * (state.grassCoverage * 1.2 + 0.2) * (dayTime ? 1 : 0);
+            if (isSpring) forageRate *= 1.2;
+            if (isSummer) forageRate *= 0.9;
+            if (isAutumn) forageRate *= 1.1;
+
+            const forageGain = s.activeForaging * forageRate * 0.2;
+            s.forageIntake = Math.min(s.forageIntake + forageGain, 200);
+
+            let births = 0;
+            if ((isSpring || isSummer) && dayTime && s.population > 3) {
+                const birthRate = 0.035 * (1 - burrowStress * 0.25) * (state.grassCoverage * 0.5 + 0.4);
+                births = Math.round(s.population * birthRate * 0.4);
+                births = clamp(births, 0, Math.round(s.population * 0.07));
+                s.birthsToday = births;
+            }
+
+            let deaths = 0;
+            const baseMort = 0.012 + burrowStress * 0.025;
+            deaths += Math.round(s.population * baseMort * 0.4);
+
+            if (Math.random() < state.predatorPressure * 0.6 && dayTime) {
+                const predKills = Math.round(s.population * (0.01 + state.predatorPressure * 0.06));
+                deaths += predKills;
+                s.predatorEncounters += predKills;
+            }
+
+            if (season === 'winter') {
+                const foragePerCap = s.forageIntake / Math.max(s.population, 1);
+                const starveRisk = Math.max(0, 1 - foragePerCap / 3);
+                const winterDeaths = Math.round(s.population * starveRisk * 0.06);
+                deaths += winterDeaths;
+                s.winterSurvival = clamp(1 - starveRisk * 0.45, 0.15, 0.95);
+            } else {
+                s.winterSurvival = clamp(s.winterSurvival + 0.003, 0.15, 0.95);
+            }
+
+            let newPop = s.population + births - deaths;
+            newPop = clamp(Math.round(newPop), 0, 200);
+            s.population = newPop;
+            s.mortalityToday = deaths;
+
+            s.burrowsUsed = Math.min(Math.round(s.population / 1.8), cfg.burrowCapacity);
+            s.burrowsUsed = clamp(s.burrowsUsed, 0, cfg.burrowCapacity);
+
+            if (state.day % 2 === 0) s.forageIntake = Math.max(0, s.forageIntake - 0.5);
+            if (season === 'winter' && state.hour % 4 < 0.5) {
+                s.forageIntake = Math.max(0, s.forageIntake - s.population * 0.025);
+            }
+        }
+
+        // ---- cicada (open plains) ----
+        function updateCicada() {
+            const c = state.cicada;
+            const season = state.season;
+            const soilTemp = state.soilTemp;
+            const dayOfYear = state.yearDay;
+            const cfg = CONFIG.cicada;
+
+            c.nymphDensity = clamp(c.nymphDensity + 0.002 + rand(-0.001, 0.001), 0.1, 2.5);
+
+            if (season === 'summer' && dayOfYear > 150 && dayOfYear < 240 && !c.emergenceTriggered) {
+                if (soilTemp > cfg.emergenceTemp && c.nymphDensity > 0.3) {
+                    const emergeCount = Math.round(c.nymphDensity * 15 + rand(5, 25));
+                    c.adultPopulation = clamp(emergeCount, 8, 200);
+                    c.emergenceTriggered = true;
+                    c.daysActive = 0;
+                    c.frostKill = false;
+                    c.nymphDensity = clamp(c.nymphDensity * 0.2, 0.1, 2.0);
+                    showAlert(`Cicada emergence! ${c.adultPopulation} adults singing.`, 'emerge');
+                    dom.ciEmerge.textContent = `Day ${dayOfYear}`;
+                    document.getElementById('cicadaPanel').classList.add('emerging');
+                    setTimeout(() => document.getElementById('cicadaPanel').classList.remove('emerging'), 2500);
+                }
+            }
+
+            if (c.emergenceTriggered && c.adultPopulation > 0) {
+                c.daysActive++;
+                const lifespan = cfg.adultLifespan + rand(-5, 5);
+                if (c.daysActive > lifespan) {
+                    c.adultPopulation = Math.max(0, c.adultPopulation - Math.round(c.adultPopulation * 0.10));
+                }
+                if (state.temperature < 8 && c.adultPopulation > 0) {
+                    c.adultPopulation = Math.max(0, c.adultPopulation - Math.round(c.adultPopulation * 0.05));
+                }
+                if (c.adultPopulation <= 0) {
+                    c.adultPopulation = 0;
+                    c.emergenceTriggered = false;
+                    c.daysActive = 0;
+                    dom.ciEmerge.textContent = '—';
+                }
+                if (state.frostEvent && c.adultPopulation > 0) {
+                    c.adultPopulation = 0;
+                    c.emergenceTriggered = false;
+                    c.daysActive = 0;
+                    c.frostKill = true;
+                }
+            }
+
+            if (c.adultPopulation > 0) {
+                dom.cicadaStatus.textContent = 'active';
+                dom.cicadaStatus.style.color = 'var(--accent-warm)';
+            } else if (c.emergenceTriggered) {
+                dom.cicadaStatus.textContent = 'emerging';
+                dom.cicadaStatus.style.color = '#e8c87a';
+            } else {
+                dom.cicadaStatus.textContent = 'dormant';
+                dom.cicadaStatus.style.color = 'var(--text-muted)';
+            }
+            dom.ciSoil.textContent = cfg.emergenceTemp + ' C';
+        }
+
+        // ---- alert ----
+        function showAlert(msg, type) {
+            dom.alertMessage.textContent = msg;
+            dom.alertBanner.classList.add('show');
+            dom.alertBanner.style.borderColor = type === 'emerge' ? 'rgba(122,154,106,0.4)' : 'rgba(200,80,70,0.15)';
+            dom.alertBanner.style.background = type === 'emerge' ? 'rgba(122,154,106,0.08)' : 'rgba(200,80,70,0.08)';
+            clearTimeout(window._alertTimeout);
+            window._alertTimeout = setTimeout(() => dom.alertBanner.classList.remove('show'), 5000);
+        }
+
+        // ---- data recording ----
+        function recordDataPoint() {
+            const sd = state.chartData;
+            sd.cottontail.push(state.cottontail.population);
+            sd.cicada.push(state.cicada.adultPopulation);
+            if (sd.cottontail.length > sd.maxPoints) {
+                sd.cottontail.shift();
+                sd.cicada.shift();
+            }
+        }
+
+        // ---- tick ----
+        function tick() {
+            state.tickCount++;
+            state.hour += 0.5;
+            if (state.hour >= 24) {
+                state.hour -= 24;
+                state.day++;
+                state.yearDay++;
+                if (state.yearDay > 365) state.yearDay = 1;
+                state.season = getSeason(state.yearDay);
+                recordDataPoint();
+                state.cottontail.predatorEncounters = 0;
+                state.cottontail.mortalityToday = 0;
+                state.cottontail.birthsToday = 0;
+                checkFrost();
+            }
+            state.temperature = getTemperature(state.yearDay, state.hour);
+            updateEnvironment();
+            updateCottontail();
+            updateCicada();
+            updateUI();
+            drawChart();
+            if (state.tickCount % 6 === 0) dom.alertBanner.classList.remove('show');
+        }
+
+        // ---- UI update ----
+        function updateUI() {
+            const d = state;
+            const ct = d.cottontail;
+            const ci = d.cicada;
+
+            dom.dayDisplay.textContent = d.day;
+            dom.seasonDisplay.textContent = getSeasonName(d.season);
+            dom.tempDisplay.textContent = Math.round(d.temperature) + ' C';
+            const h = Math.floor(d.hour);
+            const m = Math.round((d.hour - h) * 60);
+            dom.timeDisplay.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+
+            const grassPct = Math.round(d.grassCoverage * 100);
+            dom.grassPct.textContent = grassPct + '%';
+            dom.grassFill.style.width = grassPct + '%';
+            dom.grassVal.textContent = grassPct;
+
+            const brushPct = Math.round(d.brushCoverage * 100);
+            dom.brushPct.textContent = brushPct + '%';
+            dom.brushFill.style.width = brushPct + '%';
+            dom.brushVal.textContent = brushPct;
+
+            const soilPct = Math.round((d.soilTemp / 35) * 100);
+            dom.soilPct.textContent = soilPct + '%';
+            dom.soilFill.style.width = soilPct + '%';
+            dom.soilVal.textContent = Math.round(d.soilTemp) + ' C';
+
+            const firePct = Math.round(d.fireRisk * 100);
+            dom.firePct.textContent = firePct + '%';
+            dom.fireFill.style.width = firePct + '%';
+            dom.fireVal.textContent = firePct;
+
+            const predPct = Math.round(d.predatorPressure * 100);
+            dom.predPct.textContent = predPct + '%';
+            dom.predFill.style.width = predPct + '%';
+            dom.predVal.textContent = Math.round(d.predatorPressure * 8);
+
+            dom.ctPop.textContent = ct.population;
+            dom.ctBurrows.textContent = `${ct.burrowsUsed} / ${ct.maxBurrows}`;
+            dom.ctForage.textContent = Math.round(ct.forageIntake);
+            dom.ctSurvival.textContent = Math.round(ct.winterSurvival * 100) + '%';
+            dom.ctActive.textContent = ct.activeForaging;
+            dom.ctPred.textContent = ct.predatorEncounters;
+
+            dom.ciAdult.textContent = ci.adultPopulation;
+            dom.ciNymph.textContent = ci.nymphDensity.toFixed(1) + 'M / m²';
+            dom.ciDays.textContent = ci.emergenceTriggered ? ci.daysActive + ' days' : '—';
+            dom.ciFrost.textContent = ci.frostKill ? 'killed' : 'none';
+            dom.ciFrost.style.color = ci.frostKill ? '#d07060' : 'var(--text-muted)';
+
+            if (d.chartData.cottontail.length > 0) dom.chartLatestDay.textContent = `Day ${d.day}`;
+        }
+
+        // ---- chart ----
+        function drawChart() {
+            const W = canvas.clientWidth || canvas.width;
+            const H = canvas.clientHeight || canvas.height;
+            canvas.width = W;
+            canvas.height = H;
+
+            const sd = state.chartData;
+            const ct = sd.cottontail,
+                ci = sd.cicada;
+            const len = ct.length;
+
+            ctx.clearRect(0, 0, W, H);
+            if (len < 2) {
+                ctx.fillStyle = 'rgba(255,255,255,0.08)';
+                ctx.font = '14px var(--font)';
+                ctx.textAlign = 'center';
+                ctx.fillText('Waiting for data…', W / 2, H / 2);
+                return;
+            }
+
+            const pad = { top: 14, bottom: 16, left: 8, right: 10 };
+            const chartW = W - pad.left - pad.right;
+            const chartH = H - pad.top - pad.bottom;
+            const allVals = [...ct, ...ci];
+            const maxVal = Math.max(1, ...allVals) * 1.15;
+            const xScale = chartW / (len - 1);
+            const yScale = chartH / maxVal;
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 4; i++) {
+                const y = pad.top + chartH - (i / 3) * chartH;
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(pad.left + chartW, y);
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(255,255,255,0.12)';
+                ctx.font = '8px var(--font)';
+                ctx.textAlign = 'right';
+                ctx.fillText(Math.round((i / 3) * maxVal), pad.left - 4, y + 3);
+            }
+
+            drawLine(ct, '#b09060', 2.2);
+            drawLine(ci, '#c08050', 2.2);
+
+            // fills
+            [
+                [ct, 'rgba(176,144,96,0.08)'],
+                [ci, 'rgba(192,128,80,0.08)']
+            ].forEach(([data, color]) => {
+                ctx.beginPath();
+                ctx.moveTo(pad.left, pad.top + chartH);
+                for (let i = 0; i < len; i++) {
+                    const x = pad.left + i * xScale;
+                    const y = pad.top + chartH - data[i] * yScale;
+                    if (i === 0) ctx.lineTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.lineTo(pad.left + (len - 1) * xScale, pad.top + chartH);
+                ctx.closePath();
+                ctx.fillStyle = color;
+                ctx.fill();
+            });
+
+            if (len > 0) {
+                const last = len - 1;
+                const xLast = pad.left + last * xScale;
+                [
+                    [ct, '#b09060'],
+                    [ci, '#c08050']
+                ].forEach(([data, color]) => {
+                    const y = pad.top + chartH - data[last] * yScale;
+                    ctx.beginPath();
+                    ctx.arc(xLast, y, 5, 0, 2 * Math.PI);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                });
+            }
+
+            function drawLine(data, color, width) {
+                if (data.length < 2) return;
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = width;
+                for (let i = 0; i < data.length; i++) {
+                    const x = pad.left + i * xScale;
+                    const y = pad.top + chartH - data[i] * yScale;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        // ---- config sync ----
+        function syncSlidersFromConfig() {
+            const map = {
+                'slider_burrowCap': ['cottontail', 'burrowCapacity', 'val_burrowCap'],
+                'slider_ctForage': ['cottontail', 'forageRate', 'val_ctForage'],
+                'slider_ctPred': ['cottontail', 'predatorBase', 'val_ctPred'],
+                'slider_emergeTemp': ['cicada', 'emergenceTemp', 'val_emergeTemp'],
+                'slider_nymphDensity': ['cicada', 'nymphDensity', 'val_nymphDensity'],
+                'slider_lifespan': ['cicada', 'adultLifespan', 'val_lifespan'],
+            };
+            for (const [sid, [cat, key, displayId]] of Object.entries(map)) {
+                const slider = $(sid);
+                const val = CONFIG[cat][key];
+                slider.value = val;
+                if (displayId) $(displayId).textContent = val;
+            }
+        }
+
+        // ---- init ----
+        function initSim() {
+            state.cottontail.maxBurrows = CONFIG.cottontail.burrowCapacity;
+            state.cicada.nymphDensity = CONFIG.cicada.nymphDensity;
+
+            state.day = 1;
+            state.yearDay = 80;
+            state.hour = 6;
+            state.season = 'spring';
+            state.temperature = getTemperature(state.yearDay, state.hour);
+            state.soilTemp = state.temperature - 2;
+            state.frostEvent = false;
+
+            const ct = state.cottontail;
+            ct.population = 35;
+            ct.burrowsUsed = Math.min(Math.round(35 / 1.8), ct.maxBurrows);
+            ct.forageIntake = 30;
+            ct.winterSurvival = 0.82;
+            ct.activeForaging = 0;
+            ct.predatorEncounters = 0;
+            ct.mortalityToday = 0;
+            ct.birthsToday = 0;
+            ct._burrowCompetition = 0;
+
+            const ci = state.cicada;
+            ci.adultPopulation = 0;
+            ci.nymphDensity = CONFIG.cicada.nymphDensity;
+            ci.emergenceTriggered = false;
+            ci.daysActive = 0;
+            ci.frostKill = false;
+            ci._emergenceDay = -1;
+
+            state.chartData.cottontail = [];
+            state.chartData.cicada = [];
+            state.running = true;
+            state.tickCount = 0;
+
+            dom.playBtn.textContent = 'Pause';
+            dom.alertBanner.classList.remove('show');
+            document.querySelectorAll('.emerging').forEach(el => el.classList.remove('emerging'));
+
+            recordDataPoint();
+            updateUI();
+            drawChart();
+            syncSlidersFromConfig();
+        }
+
+        // ---- controls ----
+        function togglePlay() {
+            state.running = !state.running;
+            dom.playBtn.textContent = state.running ? 'Pause' : 'Play';
+            if (state.running) startLoop();
+            else stopLoop();
+        }
+
+        function stepOnce() { if (!state.running) tick(); }
+
+        function resetSim() {
+            stopLoop();
+            for (const [cat, vals] of Object.entries(DEFAULTS)) {
+                for (const [key, val] of Object.entries(vals)) {
+                    CONFIG[cat][key] = val;
+                }
+            }
+            initSim();
+            syncSlidersFromConfig();
+            if (state.running) startLoop();
+        }
+
+        function updateSpeed() {
+            const val = parseInt(dom.speedSlider.value);
+            state.speed = val;
+            dom.speedLabel.textContent = val + 'x';
+            if (state.running) { stopLoop();
+                startLoop(); }
+        }
+
+        let loopInterval = null;
+
+        function startLoop() {
+            stopLoop();
+            const interval = Math.max(50, 1000 / state.speed);
+            loopInterval = setInterval(() => { if (state.running) tick(); }, interval);
+        }
+
+        function stopLoop() { if (loopInterval) { clearInterval(loopInterval);
+                loopInterval = null; } }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => drawChart(), 100);
+        });
+
+        initSim();
+        startLoop();
+
+        window.togglePlay = togglePlay;
+        window.stepOnce = stepOnce;
+        window.resetSim = resetSim;
+        window.updateSpeed = updateSpeed;
+        window.toggleSettings = toggleSettings;
+        window.updateConfig = updateConfig;
+    </script>
+
+</body>
+</html>
