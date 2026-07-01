@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://shashank-viswanathan.github.io/Eco-West-Windsor/simulator-menu.html" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z6WVJ5BMB3"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoWestWindsor Simulator Menu</title>
+<style>
+    :root {
+        --primary-green: #2e7d32;
+        --light-green: #e8f5e9;
+        --text-dark: #333;
+        --white: #fff;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f6;
+        color: var(--text-dark);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .menu-wrapper {
+        text-align: center;
+        max-width: 1000px;
+        padding: 20px;
+    }
+
+    .menu-title {
+        color: var(--primary-green);
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+    }
+
+    .biome-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .biome-card {
+        background: var(--white);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        position: relative;
+        min-height: 350px;
+        cursor: pointer;
+    }
+
+    .biome-card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Front of the Card (Default State) */
+    .card-front {
+        display: block;
+    }
+
+    .card-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        background-color: #ccc;
+    }
+
+    .card-content {
+        padding: 20px;
+    }
+
+    .card-title {
+        margin: 0 0 10px 0;
+        color: var(--primary-green);
+        font-size: 1.4rem;
+    }
+
+    .card-desc {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #666;
+        margin: 0;
+    }
+
+    /* Action Panel (Shows after clicking the card) */
+    .card-actions {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--white);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        width: 80%;
+        transition: background 0.2s;
+    }
+
+    .btn-render {
+        background-color: var(--primary-green);
+        color: var(--white);
+    }
+
+    .btn-render:hover {
+        background-color: #1b5e20;
+    }
+
+    .btn-info {
+        background-color: var(--light-green);
+        color: var(--primary-green);
+        border: 2px solid var(--primary-green);
+    }
+
+    .btn-info:hover {
+        background-color: #c8e6c9;
+    }
+
+    .btn-back {
+        background: none;
+        color: #888;
+        border: none;
+        text-decoration: underline;
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+
+    /* Info Panel (Shows species list) */
+    .card-info {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--white);
+        flex-direction: column;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: left;
+    }
+
+    .species-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 15px 0;
+        overflow-y: auto;
+    }
+
+    .species-list li {
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .species-list a {
+        color: var(--primary-green);
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .species-list a:hover {
+        text-decoration: underline;
+    }
+
+    /* State Classes handled by JavaScript */
+    .show-actions .card-front { display: none; }
+    .show-actions .card-actions { display: flex; }
+    
+    .show-info .card-front { display: none; }
+    .show-info .card-actions { display: none; }
+    .show-info .card-info { display: flex; }
+
+</style>
+</head>
+<body>
+
+<div class="menu-wrapper">
+    <h1 class="menu-title">Select Your Environment</h1>
+    
+    <div class="biome-grid">
+        
+        <!-- Environment 1: The Deep Woods -->
+        <div class="biome-card" id="card-woods">
+            <div class="card-front" onclick="showActions('card-woods')">
+                <img src="https://placehold.co/600x400/2e7d32/ffffff?text=The+Deep+Woods" alt="Deep Woods" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">The Deep Woods</h3>
+                    <p class="card-desc">A dense, old-growth oak and maple forest environment featuring thick canopies and leaf-littered floors.</p>
+                </div>
+            </div>
+            
+            <div class="card-actions">
+                <h3 class="card-title">The Deep Woods</h3>
+                <button class="btn btn-render" onclick="startRender('The Deep Woods')">Render Simulator</button>
+                <button class="btn btn-info" onclick="showInfo('card-woods')">View Info</button>
+                <button class="btn btn-back" onclick="resetCard('card-woods')">Cancel</button>
+            </div>
+
+            <div class="card-info">
+                <h3 class="card-title">Resident Species</h3>
+                <ul class="species-list">
+                    <li><a href="https://shashank-viswanathan.github.io/Eco-West-Windsor/eastern-grey-squirrel.html" target="_blank">Eastern Grey Squirrel</a></li>
+                    <li><a href="https://shashank-viswanathan.github.io/Eco-West-Windsor/lyric-cicada.html" target="_blank">Lyric Cicada</a></li>
+                </ul>
+                <button class="btn btn-back" style="margin-top:auto;" onclick="showActions('card-woods')">← Back to Options</button>
+            </div>
+        </div>
+
+        <!-- Environment 2: Suburban Parks -->
+        <div class="biome-card" id="card-suburbs">
+            <div class="card-front" onclick="showActions('card-suburbs')">
+                <img src="https://placehold.co/600x400/81c784/ffffff?text=Suburban+Parks" alt="Suburban Parks" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">Suburban Parks</h3>
+                    <p class="card-desc">Manicured lawns intersecting with patches of wild brush, reflecting the human-modified areas of West Windsor.</p>
+                </div>
+            </div>
+            
+            <div class="card-actions">
+                <h3 class="card-title">Suburban Parks</h3>
+                <button class="btn btn-render" onclick="startRender('Suburban Parks')">Render Simulator</button>
+                <button class="btn btn-info" onclick="showInfo('card-suburbs')">View Info</button>
+                <button class="btn btn-back" onclick="resetCard('card-suburbs')">Cancel</button>
+            </div>
+
+            <div class="card-info">
+                <h3 class="card-title">Resident Species</h3>
+                <ul class="species-list">
+                    <li><a href="https://shashank-viswanathan.github.io/Eco-West-Windsor/asian-lady-beetle.html" target="_blank">Asian Lady Beetle</a></li>
+                    <li><a href="https://shashank-viswanathan.github.io/Eco-West-Windsor/eastern-cottontail.html" target="_blank">Eastern Cottontail</a></li>
+                    <li><a href="https://shashank-viswanathan.github.io/Eco-West-Windsor/eastern-grey-squirrel.html" target="_blank">Eastern Grey Squirrel</a></li>
+                </ul>
+                <button class="btn btn-back" style="margin-top:auto;" onclick="showActions('card-suburbs')">← Back to Options</button>
+            </div>
+        </div>
+
+        <!-- Environment 3: Open Plains -->
+        <div class="biome-card" id="card-plains">
+            <div class="card-front" onclick="showActions('card-plains')">
+                <img src="https://placehold.co/600x400/cddc39/333333?text=Open+Plains" alt="Open Plains" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">Open Plains</h3>
+                    <p class="card-desc">Tall grassy fields and transitional brushlands that serve as vital feeding and nesting grounds.</p>
+                </div>
+            </div>
+            
+            <div class="card-actions">
+                <h3 class="card-title">Open Plains</h3>
+                <button class="btn btn-render" onclick="startRender('Open Plains')">Render Simulator</button>
+                <button class="btn btn-info" onclick="showInfo('card-plains')">View Info</button>
+                <button class="btn btn-back" onclick="resetCard('card-plains')">Cancel</button>
+            </div>
+
+            <div class="card-info">
+                <h3 class="card-title">Resident Species</h3>
+                <ul class="species-list">
+                    <li><a href="https://shashank-viswanathan.github.io/Eco-West-Windsor/eastern-cottontail.html" target="_blank">Eastern Cottontail</a></li>
+                    <li><a href="https://shashank-viswanathan.github.io/Eco-West-Windsor/lyric-cicada.html" target="_blank">Lyric Cicada</a></li>
+                </ul>
+                <button class="btn btn-back" style="margin-top:auto;" onclick="showActions('card-plains')">← Back to Options</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Reveal the Render/Info buttons
+    function showActions(cardId) {
+        resetAllCards();
+        document.getElementById(cardId).classList.add('show-actions');
+    }
+
+    // Reveal the Species list
+    function showInfo(cardId) {
+        document.getElementById(cardId).classList.remove('show-actions');
+        document.getElementById(cardId).classList.add('show-info');
+    }
+
+    // Return card to default image/description state
+    function resetCard(cardId) {
+        document.getElementById(cardId).classList.remove('show-actions', 'show-info');
+    }
+
+    // Ensure only one card is active at a time
+    function resetAllCards() {
+        const cards = document.querySelectorAll('.biome-card');
+        cards.forEach(card => {
+            card.classList.remove('show-actions', 'show-info');
+        });
+    }
+
+    // Render button – opens the corresponding HTML file
+    function startRender(environmentName) {
+        var fileMap = {
+            'The Deep Woods': 'deepwoods.html',
+            'Suburban Parks': 'suburbanparks.html',
+            'Open Plains': 'openplains.html'
+        };
+        var fileName = fileMap[environmentName];
+        if (fileName) {
+            window.location.href = fileName;
+        } else {
+            alert('Simulator file not found for: ' + environmentName);
+        }
+    }
+</script>
+
+</body>
+</html>
