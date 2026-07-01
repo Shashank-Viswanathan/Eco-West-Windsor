@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://shashank-viswanathan.github.io/Eco-West-Windsor/suburbanparks.html" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z6WVJ5BMB3"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suburban Parks — Configurable Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #2a2a2a;
+            --panel-bg: rgba(40, 40, 40, 0.94);
+            --border-color: rgba(180, 160, 130, 0.15);
+            --text-light: #eae4dc;
+            --text-muted: #b0a090;
+            --accent-amber: #c97e3a;
+            --accent-brown: #a08060;
+            --accent-red: #c06040;
+            --accent-green: #6a8a5a;
+            --radius: 14px;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s ease;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(120, 100, 80, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(100, 80, 60, 0.10) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 2px, transparent 2px, transparent 6px);
+        }
+
+        .sim-container {
+            width: 100%;
+            max-width: 1360px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(4px);
+            border-radius: var(--radius);
+            padding: 22px 28px 28px;
+            box-shadow: none;
+            border: 1px solid var(--border-color);
+            transition: opacity 0.4s ease;
+            margin-top: 0;
+        }
+
+        .sim-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sim-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-amber);
+        }
+        .sim-header h1 span {
+            background: rgba(200, 130, 70, 0.2);
+            padding: 2px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+        .header-stats .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 14px 4px 12px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+        .header-stats .stat-item .label {
+            color: var(--text-muted);
+        }
+        .header-stats .stat-item .value {
+            font-weight: 600;
+            color: #e0d6c8;
+        }
+        .season-badge {
+            background: #3a3a30;
+            padding: 2px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .settings-toggle {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font);
+            margin-left: 10px;
+        }
+        .settings-toggle:hover {
+            background: rgba(200, 130, 70, 0.15);
+            border-color: var(--accent-amber);
+        }
+
+        .settings-panel {
+            display: none;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: var(--radius);
+            padding: 16px 20px 20px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border-color);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px 30px;
+            transition: all 0.3s ease;
+        }
+        .settings-panel.open {
+            display: grid;
+        }
+        .settings-panel .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .settings-panel .setting-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+        .settings-panel .setting-group label .val {
+            color: var(--accent-amber);
+            font-weight: 600;
+        }
+        .settings-panel input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent-amber);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            height: 4px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .settings-panel input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-amber);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .settings-panel input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-amber);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .metric-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 8px 12px 10px;
+            border: 1px solid var(--border-color);
+            transition: border var(--transition);
+        }
+        .metric-card:hover {
+            border-color: rgba(200, 130, 70, 0.25);
+        }
+        .metric-card .metric-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+        .metric-card .metric-bar {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2px;
+        }
+        .metric-card .metric-bar .fill {
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.6s ease;
+            background: linear-gradient(90deg, var(--accent-brown), var(--accent-amber));
+        }
+        .metric-card .metric-value {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 2px;
+            color: #d8d0c8;
+        }
+        .metric-card .metric-value small {
+            font-weight: 300;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 22px;
+            margin-top: 4px;
+        }
+
+        .chart-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius);
+            padding: 14px 16px 16px;
+            border: 1px solid var(--border-color);
+        }
+        .chart-panel .chart-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chart-panel .chart-title .legend {
+            display: flex;
+            gap: 14px;
+            font-size: 0.7rem;
+        }
+        .chart-panel .chart-title .legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .chart-panel .chart-title .legend .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot-squirrel {
+            background: var(--accent-amber);
+        }
+        .dot-cottontail {
+            background: var(--accent-brown);
+        }
+        .dot-ladybeetle {
+            background: var(--accent-red);
+        }
+
+        #populationChart {
+            width: 100%;
+            height: 180px;
+            display: block;
+            background: rgba(0, 0, 0, 0.20);
+            border-radius: 8px;
+        }
+
+        .species-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .species-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius);
+            padding: 12px 14px 14px;
+            border: 1px solid var(--border-color);
+            transition: border var(--transition);
+        }
+        .species-panel:hover {
+            border-color: rgba(200, 130, 70, 0.15);
+        }
+        .species-panel .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .species-panel .panel-head h3 {
+            font-size: 1.0rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #d8d0c8;
+        }
+        .species-panel .panel-head .badge {
+            font-size: 0.6rem;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 2px 10px;
+            border-radius: 30px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+        .species-panel .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px 12px;
+            margin-top: 2px;
+        }
+        .species-panel .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .species-panel .stat-row .s-label {
+            color: var(--text-muted);
+        }
+        .species-panel .stat-row .s-value {
+            font-weight: 500;
+            color: #d0c8c0;
+        }
+        .species-panel .stat-row .s-value.danger {
+            color: #e07060;
+        }
+        .species-panel .stat-row .s-value.warning {
+            color: var(--accent-amber);
+        }
+        .species-panel .stat-row .s-value.success {
+            color: var(--accent-green);
+        }
+
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+        .controls-row .btn-group {
+            display: flex;
+            gap: 5px;
+        }
+        .controls-row button {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 5px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font);
+        }
+        .controls-row button:hover {
+            background: rgba(200, 130, 70, 0.12);
+            border-color: var(--accent-amber);
+            transform: translateY(-1px);
+        }
+        .controls-row button:active {
+            transform: scale(0.97);
+        }
+        .controls-row button.primary {
+            background: var(--accent-amber);
+            border-color: var(--accent-amber);
+            color: #1a1a1a;
+        }
+        .controls-row button.primary:hover {
+            background: #d48a4a;
+            border-color: #d48a4a;
+        }
+        .controls-row button.danger {
+            border-color: rgba(200, 80, 70, 0.3);
+            color: #e07060;
+        }
+        .controls-row button.danger:hover {
+            background: rgba(200, 80, 70, 0.12);
+        }
+        .controls-row .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .controls-row .speed-control input[type="range"] {
+            width: 70px;
+            accent-color: var(--accent-amber);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            height: 4px;
+            cursor: pointer;
+        }
+        .controls-row .speed-control .speed-label {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .alert-banner {
+            margin-top: 12px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            background: rgba(200, 80, 70, 0.12);
+            border: 1px solid rgba(200, 80, 70, 0.15);
+            color: #e8a090;
+            font-size: 0.8rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-banner.show {
+            display: flex;
+        }
+
+        @media (max-width: 920px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .sim-container {
+                padding: 14px 12px 16px;
+            }
+            .sim-header h1 {
+                font-size: 1.3rem;
+            }
+            .settings-panel {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 500px) {
+            .settings-panel {
+                grid-template-columns: 1fr;
+            }
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .controls-row .speed-control {
+                margin-left: 0;
+            }
+            .species-panel .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        * { border-radius: 0 !important; }
+    </style>
+</head>
+<body>
+
+    <div class="sim-container" id="app">
+        <header class="sim-header">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;">
+                <h1>
+                    Suburban Parks
+                    <span>configurable</span>
+                </h1>
+                <button class="settings-toggle" onclick="toggleSettings()">Parameters</button>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item"><span class="label">Day</span><span class="value" id="dayDisplay">1</span></div>
+                <div class="stat-item"><span class="label">Season</span><span class="season-badge" id="seasonDisplay">Spring</span></div>
+                <div class="stat-item"><span class="label">Temp</span><span class="value" id="tempDisplay">14 C</span></div>
+                <div class="stat-item"><span class="label">Time</span><span class="value" id="timeDisplay">06:00</span></div>
+            </div>
+        </header>
+
+        <div class="settings-panel" id="settingsPanel">
+            <!-- Squirrel -->
+            <div class="setting-group">
+                <label>Nest Capacity <span class="val" id="val_sqNests">35</span></label>
+                <input type="range" id="slider_sqNests" min="10" max="60" value="35" step="1" oninput="updateConfig('squirrel','nestCapacity', this.value, 'val_sqNests')">
+            </div>
+            <div class="setting-group">
+                <label>Foraging Rate <span class="val" id="val_sqForage">0.09</span></label>
+                <input type="range" id="slider_sqForage" min="0.03" max="0.25" value="0.09" step="0.005" oninput="updateConfig('squirrel','forageRate', this.value, 'val_sqForage')">
+            </div>
+            <div class="setting-group">
+                <label>Human Adaptation <span class="val" id="val_sqAdapt">0.6</span></label>
+                <input type="range" id="slider_sqAdapt" min="0.1" max="1.0" value="0.6" step="0.05" oninput="updateConfig('squirrel','humanAdaptation', this.value, 'val_sqAdapt')">
+            </div>
+            <div class="setting-group">
+                <label>Predator Pressure <span class="val" id="val_sqPred">0.10</span></label>
+                <input type="range" id="slider_sqPred" min="0.0" max="0.40" value="0.10" step="0.01" oninput="updateConfig('squirrel','predatorBase', this.value, 'val_sqPred')">
+            </div>
+            <!-- Cottontail -->
+            <div class="setting-group">
+                <label>Burrow Capacity <span class="val" id="val_burrowCap">20</span></label>
+                <input type="range" id="slider_burrowCap" min="5" max="40" value="20" step="1" oninput="updateConfig('cottontail','burrowCapacity', this.value, 'val_burrowCap')">
+            </div>
+            <div class="setting-group">
+                <label>Foraging Rate <span class="val" id="val_ctForage">0.07</span></label>
+                <input type="range" id="slider_ctForage" min="0.02" max="0.20" value="0.07" step="0.005" oninput="updateConfig('cottontail','forageRate', this.value, 'val_ctForage')">
+            </div>
+            <div class="setting-group">
+                <label>Human Hazard <span class="val" id="val_ctHuman">0.15</span></label>
+                <input type="range" id="slider_ctHuman" min="0.0" max="0.50" value="0.15" step="0.01" oninput="updateConfig('cottontail','humanHazard', this.value, 'val_ctHuman')">
+            </div>
+            <div class="setting-group">
+                <label>Predator Pressure <span class="val" id="val_ctPred">0.12</span></label>
+                <input type="range" id="slider_ctPred" min="0.0" max="0.50" value="0.12" step="0.01" oninput="updateConfig('cottontail','predatorBase', this.value, 'val_ctPred')">
+            </div>
+            <!-- Lady Beetle -->
+            <div class="setting-group">
+                <label>Emergence Threshold <span class="val" id="val_emergeThresh">0.6</span></label>
+                <input type="range" id="slider_emergeThresh" min="0.2" max="1.5" value="0.6" step="0.05" oninput="updateConfig('ladybeetle','emergenceThreshold', this.value, 'val_emergeThresh')">
+            </div>
+            <div class="setting-group">
+                <label>Overwinter Survival <span class="val" id="val_overwinter">0.70</span></label>
+                <input type="range" id="slider_overwinter" min="0.2" max="0.95" value="0.70" step="0.05" oninput="updateConfig('ladybeetle','overwinterSurvival', this.value, 'val_overwinter')">
+            </div>
+            <div class="setting-group">
+                <label>Aphid Growth Rate <span class="val" id="val_aphidGrow">0.015</span></label>
+                <input type="range" id="slider_aphidGrow" min="0.003" max="0.030" value="0.015" step="0.001" oninput="updateConfig('ladybeetle','aphidGrowthRate', this.value, 'val_aphidGrow')">
+            </div>
+            <div class="setting-group">
+                <label>Initial Aggregation <span class="val" id="val_initAgg">0.9</span></label>
+                <input type="range" id="slider_initAgg" min="0.1" max="2.5" value="0.9" step="0.1" oninput="updateConfig('ladybeetle','initialAggregation', this.value, 'val_initAgg')">
+            </div>
+        </div>
+
+        <div class="metrics-row" id="metricsRow">
+            <div class="metric-card"><div class="metric-label"><span>Lawn Coverage</span><span id="lawnPct">0%</span></div><div class="metric-bar"><div class="fill" id="lawnFill" style="width:0%"></div></div><div class="metric-value"><span id="lawnVal">0</span> <small>%</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Brush Coverage</span><span id="brushPct">0%</span></div><div class="metric-bar"><div class="fill" id="brushFill" style="width:0%"></div></div><div class="metric-value"><span id="brushVal">0</span> <small>%</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Human Disturbance</span><span id="humanPct">0%</span></div><div class="metric-bar"><div class="fill" id="humanFill" style="width:0%"></div></div><div class="metric-value"><span id="humanVal">0</span> <small>%</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Aphid Abundance</span><span id="aphidPct">0%</span></div><div class="metric-bar"><div class="fill" id="aphidFill" style="width:0%"></div></div><div class="metric-value"><span id="aphidVal">0</span> <small>units</small></div></div>
+            <div class="metric-card"><div class="metric-label"><span>Predator Pressure</span><span id="predPct">0%</span></div><div class="metric-bar"><div class="fill" id="predFill" style="width:0%; background:linear-gradient(90deg,#a06050,#d08070)"></div></div><div class="metric-value"><span id="predVal">0</span> <small>nearby</small></div></div>
+        </div>
+
+        <div class="main-grid">
+            <div class="chart-panel">
+                <div class="chart-title">
+                    <span>Population Over Time</span>
+                    <div class="legend">
+                        <span><span class="dot dot-squirrel"></span> Squirrel</span>
+                        <span><span class="dot dot-cottontail"></span> Cottontail</span>
+                        <span><span class="dot dot-ladybeetle"></span> Lady Beetle</span>
+                    </div>
+                </div>
+                <canvas id="populationChart" width="600" height="180"></canvas>
+                <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-muted);margin-top:2px;"><span>Day 1</span><span id="chartLatestDay">Day 1</span></div>
+            </div>
+
+            <div class="species-stack">
+                <!-- Squirrel -->
+                <div class="species-panel" id="squirrelPanel">
+                    <div class="panel-head"><h3>Eastern Grey Squirrel</h3><span class="badge" id="squirrelStatus">inactive</span></div>
+                    <div class="stats-grid">
+                        <div class="stat-row"><span class="s-label">Population</span><span class="s-value" id="sqPop">42</span></div>
+                        <div class="stat-row"><span class="s-label">Nests Used</span><span class="s-value" id="sqNests">12 / 35</span></div>
+                        <div class="stat-row"><span class="s-label">Food Cache</span><span class="s-value" id="sqCache">150</span></div>
+                        <div class="stat-row"><span class="s-label">Winter Survival</span><span class="s-value" id="sqSurvival">90%</span></div>
+                        <div class="stat-row"><span class="s-label">Active Foraging</span><span class="s-value" id="sqActive">0</span></div>
+                        <div class="stat-row"><span class="s-label">Hazards Encountered</span><span class="s-value" id="sqHazards">0</span></div>
+                    </div>
+                </div>
+
+                <!-- Cottontail -->
+                <div class="species-panel" id="cottontailPanel">
+                    <div class="panel-head"><h3>Eastern Cottontail</h3><span class="badge" id="cottontailStatus">inactive</span></div>
+                    <div class="stats-grid">
+                        <div class="stat-row"><span class="s-label">Population</span><span class="s-value" id="ctPop">28</span></div>
+                        <div class="stat-row"><span class="s-label">Burrows Used</span><span class="s-value" id="ctBurrows">6 / 20</span></div>
+                        <div class="stat-row"><span class="s-label">Forage Intake</span><span class="s-value" id="ctForage">0</span></div>
+                        <div class="stat-row"><span class="s-label">Winter Survival</span><span class="s-value" id="ctSurvival">85%</span></div>
+                        <div class="stat-row"><span class="s-label">Active Foraging</span><span class="s-value" id="ctActive">0</span></div>
+                        <div class="stat-row"><span class="s-label">Predator Encounters</span><span class="s-value" id="ctPred">0</span></div>
+                    </div>
+                </div>
+
+                <!-- Lady Beetle -->
+                <div class="species-panel" id="ladybeetlePanel">
+                    <div class="panel-head"><h3>Asian Lady Beetle</h3><span class="badge" id="ladybeetleStatus">dormant</span></div>
+                    <div class="stats-grid">
+                        <div class="stat-row"><span class="s-label">Adult Population</span><span class="s-value" id="lbAdult">0</span></div>
+                        <div class="stat-row"><span class="s-label">Aggregation Size</span><span class="s-value" id="lbAgg">0.9</span></div>
+                        <div class="stat-row"><span class="s-label">Overwintering</span><span class="s-value" id="lbOverwinter">active</span></div>
+                        <div class="stat-row"><span class="s-label">Emergence</span><span class="s-value" id="lbEmerge">—</span></div>
+                        <div class="stat-row"><span class="s-label">Days Active</span><span class="s-value" id="lbDays">—</span></div>
+                        <div class="stat-row"><span class="s-label">Cold Kill</span><span class="s-value" id="lbCold">none</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-banner" id="alertBanner"><span class="icon"></span><span id="alertMessage">Alert</span></div>
+
+        <div class="controls-row">
+            <div class="btn-group">
+                <button id="playBtn" class="primary" onclick="togglePlay()">Pause</button>
+                <button onclick="stepOnce()">Step</button>
+                <button onclick="resetSim()" class="danger">Reset</button>
+            </div>
+            <div class="speed-control">
+                <span>Slow</span>
+                <input type="range" id="speedSlider" min="1" max="10" value="3" step="1" oninput="updateSpeed()" />
+                <span>Fast</span>
+                <span class="speed-label" id="speedLabel">3x</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // suburban sim engine – three species with distinct behaviors
+
+        const CONFIG = {
+            squirrel: {
+                nestCapacity: 35,
+                forageRate: 0.09,
+                humanAdaptation: 0.6,
+                predatorBase: 0.10,
+            },
+            cottontail: {
+                burrowCapacity: 20,
+                forageRate: 0.07,
+                humanHazard: 0.15,
+                predatorBase: 0.12,
+            },
+            ladybeetle: {
+                emergenceThreshold: 0.6,
+                overwinterSurvival: 0.70,
+                aphidGrowthRate: 0.015,
+                initialAggregation: 0.9,
+            }
+        };
+        const DEFAULTS = JSON.parse(JSON.stringify(CONFIG));
+
+        const state = {
+            day: 1,
+            hour: 6,
+            season: 'spring',
+            yearDay: 80,
+            temperature: 14,
+            lawnCoverage: 0.70,
+            brushCoverage: 0.30,
+            humanDisturbance: 0.20,
+            aphidAbundance: 0.50,
+            predatorPressure: 0.12,
+            frostEvent: false,
+            squirrel: {
+                population: 42,
+                nestsUsed: 12,
+                maxNests: 35,
+                foodCache: 150,
+                winterSurvival: 0.90,
+                activeForaging: 0,
+                hazardsEncountered: 0,
+                mortalityToday: 0,
+                birthsToday: 0,
+                _nestCompetition: 0,
+            },
+            cottontail: {
+                population: 28,
+                burrowsUsed: 6,
+                maxBurrows: 20,
+                forageIntake: 0,
+                winterSurvival: 0.85,
+                activeForaging: 0,
+                predatorEncounters: 0,
+                mortalityToday: 0,
+                birthsToday: 0,
+                _burrowCompetition: 0,
+            },
+            ladybeetle: {
+                adultPopulation: 0,
+                aggregationSize: 0.9,
+                overwintering: true,
+                emergenceTriggered: false,
+                daysActive: 0,
+                coldKill: false,
+                _emergenceDay: -1,
+            },
+            chartData: { squirrel: [], cottontail: [], ladybeetle: [], maxPoints: 120 },
+            running: true,
+            speed: 3,
+            tickTimer: null,
+            tickCount: 0,
+        };
+
+        const $ = id => document.getElementById(id);
+        const dom = {
+            dayDisplay: $('dayDisplay'),
+            seasonDisplay: $('seasonDisplay'),
+            tempDisplay: $('tempDisplay'),
+            timeDisplay: $('timeDisplay'),
+            lawnPct: $('lawnPct'),
+            lawnFill: $('lawnFill'),
+            lawnVal: $('lawnVal'),
+            brushPct: $('brushPct'),
+            brushFill: $('brushFill'),
+            brushVal: $('brushVal'),
+            humanPct: $('humanPct'),
+            humanFill: $('humanFill'),
+            humanVal: $('humanVal'),
+            aphidPct: $('aphidPct'),
+            aphidFill: $('aphidFill'),
+            aphidVal: $('aphidVal'),
+            predPct: $('predPct'),
+            predFill: $('predFill'),
+            predVal: $('predVal'),
+            sqPop: $('sqPop'),
+            sqNests: $('sqNests'),
+            sqCache: $('sqCache'),
+            sqSurvival: $('sqSurvival'),
+            sqActive: $('sqActive'),
+            sqHazards: $('sqHazards'),
+            squirrelStatus: $('squirrelStatus'),
+            ctPop: $('ctPop'),
+            ctBurrows: $('ctBurrows'),
+            ctForage: $('ctForage'),
+            ctSurvival: $('ctSurvival'),
+            ctActive: $('ctActive'),
+            ctPred: $('ctPred'),
+            cottontailStatus: $('cottontailStatus'),
+            lbAdult: $('lbAdult'),
+            lbAgg: $('lbAgg'),
+            lbOverwinter: $('lbOverwinter'),
+            lbEmerge: $('lbEmerge'),
+            lbDays: $('lbDays'),
+            lbCold: $('lbCold'),
+            ladybeetleStatus: $('ladybeetleStatus'),
+            alertBanner: $('alertBanner'),
+            alertMessage: $('alertMessage'),
+            chartLatestDay: $('chartLatestDay'),
+            playBtn: $('playBtn'),
+            speedLabel: $('speedLabel'),
+            speedSlider: $('speedSlider'),
+        };
+        const canvas = $('populationChart');
+        const ctx = canvas.getContext('2d');
+
+        function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+        function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
+
+        function getSeason(dayOfYear) {
+            const d = dayOfYear % 365;
+            if (d < 80) return 'winter';
+            if (d < 172) return 'spring';
+            if (d < 264) return 'summer';
+            if (d < 355) return 'autumn';
+            return 'winter';
+        }
+        function getSeasonName(s) { return { spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' } [s] ||
+                'Spring'; }
+
+        function getDayLength(d) { return 12 + 4.5 * Math.sin(((d % 365) / 365) * 2 * Math.PI - 0.4); }
+
+        function getTemperature(dayOfYear, hour) {
+            const d = (dayOfYear % 365) / 365 * 2 * Math.PI;
+            const base = 12 + 18 * Math.sin(d - 0.8);
+            const diurnal = 5 * Math.sin((hour / 24) * 2 * Math.PI - 1.2);
+            return clamp(base + diurnal + rand(-0.6, 0.6), -4, 38);
+        }
+
+        function isDaytime(hour, dayOfYear) {
+            const length = getDayLength(dayOfYear);
+            const sunrise = 12 - length / 2;
+            const sunset = 12 + length / 2;
+            return hour >= sunrise && hour <= sunset;
+        }
+
+        function updateConfig(cat, key, value, displayId) {
+            const num = parseFloat(value);
+            CONFIG[cat][key] = num;
+            if (displayId) $(displayId).textContent = num;
+        }
+
+        function toggleSettings() {
+            document.getElementById('settingsPanel').classList.toggle('open');
+        }
+
+        // ---- environment ----
+        function updateEnvironment() {
+            const d = state.yearDay;
+            let lawnBase = 0.6 + 0.25 * Math.sin(((d - 120) / 365) * 2 * Math.PI + 0.2);
+            lawnBase = clamp(lawnBase, 0.2, 0.95);
+            state.lawnCoverage = clamp(state.lawnCoverage + (lawnBase - state.lawnCoverage) * 0.02 + rand(-0.01, 0.01), 0.1,
+            1);
+            state.brushCoverage = clamp(1 - state.lawnCoverage + rand(-0.05, 0.05), 0.05, 0.8);
+            let humanBase = 0.15 + 0.15 * Math.sin(((d - 150) / 365) * 2 * Math.PI + 0.5);
+            humanBase = clamp(humanBase, 0.05, 0.45);
+            state.humanDisturbance = clamp(state.humanDisturbance + (humanBase - state.humanDisturbance) * 0.02 + rand(-0.005,
+                0.005), 0.02, 0.55);
+            let aphidBase = 0.3 + 0.5 * Math.sin(((d - 100) / 365) * 2 * Math.PI - 0.3);
+            aphidBase = clamp(aphidBase, 0.05, 0.95);
+            state.aphidAbundance = clamp(state.aphidAbundance + (aphidBase - state.aphidAbundance) * 0.015 + rand(-0.02,
+                0.02), 0.02, 1);
+            // Predator pressure is a mix of natural and human-related
+            let predBase = 0.08 + 0.06 * Math.sin(((d - 120) / 365) * 2 * Math.PI + 0.2);
+            predBase = clamp(predBase, 0.02, 0.40);
+            state.predatorPressure = clamp(state.predatorPressure + (predBase - state.predatorPressure) * 0.02 + rand(-0.005,
+                0.005), 0.01, 0.50);
+        }
+
+        function checkFrost() {
+            if ((state.season === 'autumn' || state.season === 'winter') && state.temperature < 0) {
+                if (!state.frostEvent) {
+                    state.frostEvent = true;
+                    if (state.ladybeetle.adultPopulation > 0) {
+                        state.ladybeetle.adultPopulation = 0;
+                        state.ladybeetle.coldKill = true;
+                        state.ladybeetle.emergenceTriggered = false;
+                        state.ladybeetle.daysActive = 0;
+                        showAlert('Cold snap killed all active lady beetles.', 'warning');
+                    }
+                }
+            } else {
+                state.frostEvent = false;
+            }
+        }
+
+        // ---- SQUIRREL (suburban adapted) ----
+        function updateSquirrel() {
+            const s = state.squirrel;
+            const dayTime = isDaytime(state.hour, state.yearDay);
+            const season = state.season;
+            const cfg = CONFIG.squirrel;
+
+            if (dayTime) {
+                s.activeForaging = Math.round(s.population * (0.5 + 0.4 * Math.sin((state.hour / 24) * 2 * Math.PI - 0.8)));
+                s.activeForaging = clamp(s.activeForaging, 0, s.population);
+                dom.squirrelStatus.textContent = 'active';
+            } else {
+                s.activeForaging = 0;
+                dom.squirrelStatus.textContent = 'inactive';
+            }
+
+            // Nest competition (trees + buildings)
+            const nestDemand = s.population / 2.0;
+            s._nestCompetition = clamp(nestDemand / cfg.nestCapacity, 0, 1.5);
+            const nestStress = Math.max(0, s._nestCompetition - 0.8);
+
+            // Foraging – higher in suburban due to human food
+            const isAutumn = season === 'autumn';
+            let forageRate = cfg.forageRate * (0.7 + 0.3 * state.lawnCoverage) * (dayTime ? 1 : 0);
+            if (isAutumn) forageRate *= 1.4; // still caching but less critical
+            if (season === 'spring') forageRate *= 1.1;
+            if (season === 'summer') forageRate *= 0.8;
+
+            const cacheGain = s.activeForaging * forageRate * 0.25;
+            s.foodCache = clamp(s.foodCache + cacheGain, 0, 2000);
+
+            // Reproduction (spring-summer)
+            let births = 0;
+            if ((season === 'spring' || season === 'summer') && dayTime && s.population > 4) {
+                const birthRate = 0.035 * (1 - nestStress * 0.25) * (0.6 + 0.4 * state.lawnCoverage);
+                births = Math.round(s.population * birthRate * 0.5);
+                births = clamp(births, 0, Math.round(s.population * 0.09));
+                s.birthsToday = births;
+            }
+
+            // Mortality
+            let deaths = 0;
+            const baseMort = 0.01 + nestStress * 0.02;
+            deaths += Math.round(s.population * baseMort * 0.4);
+
+            // Natural predation (lower in suburbs)
+            if (Math.random() < state.predatorPressure * 0.4 && dayTime) {
+                const predKills = Math.round(s.population * (0.005 + state.predatorPressure * 0.04));
+                deaths += predKills;
+                s.hazardsEncountered += predKills;
+            }
+            // Human hazards – but squirrels adapt (humanAdaptation reduces risk)
+            const humanRisk = state.humanDisturbance * (1 - cfg.humanAdaptation * 0.7);
+            if (Math.random() < humanRisk * 0.5 && dayTime) {
+                const humanKills = Math.round(s.population * (0.005 + humanRisk * 0.03));
+                deaths += humanKills;
+                s.hazardsEncountered += humanKills;
+            }
+
+            // Winter – cache helps but less critical due to bird feeders
+            if (season === 'winter') {
+                const cachePerCap = s.foodCache / Math.max(s.population, 1);
+                const starveRisk = Math.max(0, 1 - cachePerCap / 5);
+                const winterDeaths = Math.round(s.population * starveRisk * 0.03);
+                deaths += winterDeaths;
+                s.winterSurvival = clamp(1 - starveRisk * 0.35, 0.2, 0.97);
+            } else {
+                s.winterSurvival = clamp(s.winterSurvival + 0.002, 0.2, 0.97);
+            }
+
+            let newPop = s.population + births - deaths;
+            newPop = clamp(Math.round(newPop), 0, 250);
+            s.population = newPop;
+            s.mortalityToday = deaths;
+
+            s.nestsUsed = Math.min(Math.round(s.population / 2.0), cfg.nestCapacity);
+            s.nestsUsed = clamp(s.nestsUsed, 0, cfg.nestCapacity);
+
+            // Cache decay
+            if (state.day % 2 === 0) s.foodCache = Math.max(0, s.foodCache - 0.3);
+            if (season === 'winter' && state.hour % 4 < 0.5) {
+                s.foodCache = Math.max(0, s.foodCache - s.population * 0.02);
+            }
+        }
+
+        // ---- COTTONTAIL ----
+        function updateCottontail() {
+            const s = state.cottontail;
+            const dayTime = isDaytime(state.hour, state.yearDay);
+            const season = state.season;
+            const cfg = CONFIG.cottontail;
+
+            if (dayTime) {
+                s.activeForaging = Math.round(s.population * (0.5 + 0.3 * Math.sin((state.hour / 24) * 2 * Math.PI - 1.0)));
+                s.activeForaging = clamp(s.activeForaging, 0, s.population);
+                dom.cottontailStatus.textContent = 'active';
+            } else {
+                s.activeForaging = 0;
+                dom.cottontailStatus.textContent = 'inactive';
+            }
+
+            const burrowDemand = s.population / 1.8;
+            s._burrowCompetition = clamp(burrowDemand / cfg.burrowCapacity, 0, 1.5);
+            const burrowStress = Math.max(0, s._burrowCompetition - 0.85);
+
+            const isSpring = season === 'spring';
+            const isSummer = season === 'summer';
+            const isAutumn = season === 'autumn';
+            let forageRate = cfg.forageRate * (state.brushCoverage * 1.2 + 0.2) * (dayTime ? 1 : 0);
+            if (isSpring) forageRate *= 1.2;
+            if (isSummer) forageRate *= 0.9;
+            if (isAutumn) forageRate *= 1.1;
+
+            const forageGain = s.activeForaging * forageRate * 0.2;
+            s.forageIntake = Math.min(s.forageIntake + forageGain, 200);
+
+            let births = 0;
+            if ((isSpring || isSummer) && dayTime && s.population > 3) {
+                const birthRate = 0.03 * (1 - burrowStress * 0.3) * (state.brushCoverage * 0.6 + 0.3);
+                births = Math.round(s.population * birthRate * 0.4);
+                births = clamp(births, 0, Math.round(s.population * 0.07));
+                s.birthsToday = births;
+            }
+
+            let deaths = 0;
+            const baseMort = 0.01 + burrowStress * 0.025;
+            deaths += Math.round(s.population * baseMort * 0.4);
+
+            // Natural predation
+            if (Math.random() < state.predatorPressure * 0.5 && dayTime) {
+                const predKills = Math.round(s.population * (0.01 + state.predatorPressure * 0.05));
+                deaths += predKills;
+                s.predatorEncounters += predKills;
+            }
+            // Human hazards (cars, pets) – no adaptation for cottontails
+            if (Math.random() < cfg.humanHazard * 0.7 && dayTime) {
+                const humanKills = Math.round(s.population * (0.005 + cfg.humanHazard * 0.04));
+                deaths += humanKills;
+                s.predatorEncounters += humanKills;
+            }
+
+            if (season === 'winter') {
+                const foragePerCap = s.forageIntake / Math.max(s.population, 1);
+                const starveRisk = Math.max(0, 1 - foragePerCap / 3);
+                const winterDeaths = Math.round(s.population * starveRisk * 0.06);
+                deaths += winterDeaths;
+                s.winterSurvival = clamp(1 - starveRisk * 0.45, 0.15, 0.95);
+            } else {
+                s.winterSurvival = clamp(s.winterSurvival + 0.003, 0.15, 0.95);
+            }
+
+            let newPop = s.population + births - deaths;
+            newPop = clamp(Math.round(newPop), 0, 180);
+            s.population = newPop;
+            s.mortalityToday = deaths;
+
+            s.burrowsUsed = Math.min(Math.round(s.population / 1.8), cfg.burrowCapacity);
+            s.burrowsUsed = clamp(s.burrowsUsed, 0, cfg.burrowCapacity);
+
+            if (state.day % 2 === 0) s.forageIntake = Math.max(0, s.forageIntake - 0.5);
+            if (season === 'winter' && state.hour % 4 < 0.5) {
+                s.forageIntake = Math.max(0, s.forageIntake - s.population * 0.025);
+            }
+        }
+
+        // ---- LADY BEETLE ----
+        function updateLadyBeetle() {
+            const lb = state.ladybeetle;
+            const season = state.season;
+            const temp = state.temperature;
+            const dayOfYear = state.yearDay;
+            const cfg = CONFIG.ladybeetle;
+
+            // Overwintering adults
+            if (season === 'winter') {
+                lb.overwintering = true;
+                lb.aggregationSize = clamp(lb.aggregationSize * (0.98 + rand(-0.01, 0.01)), 0.1, 2.5);
+                // Overwinter mortality
+                if (temp < -2 && Math.random() < 0.02) {
+                    lb.aggregationSize *= 0.97;
+                }
+                // Emergence in spring
+                if (dayOfYear > 85 && temp > 10 && lb.aggregationSize > cfg.emergenceThreshold && !lb.emergenceTriggered) {
+                    const emergeCount = Math.round(lb.aggregationSize * 18 + rand(5, 20));
+                    lb.adultPopulation = clamp(emergeCount, 5, 280);
+                    lb.emergenceTriggered = true;
+                    lb.daysActive = 0;
+                    lb.coldKill = false;
+                    lb.overwintering = false;
+                    lb.aggregationSize *= 0.3;
+                    showAlert(`Lady beetles emerged! ${lb.adultPopulation} adults active.`, 'emerge');
+                    dom.lbEmerge.textContent = `Day ${dayOfYear}`;
+                    document.getElementById('ladybeetlePanel').classList.add('emerging');
+                    setTimeout(() => document.getElementById('ladybeetlePanel').classList.remove('emerging'), 2500);
+                }
+            } else {
+                lb.overwintering = false;
+            }
+
+            // Adult stage
+            if (lb.emergenceTriggered && lb.adultPopulation > 0) {
+                lb.daysActive++;
+                const aphid = state.aphidAbundance;
+
+                // Reproduction – aphid dependent
+                let births = 0;
+                if (aphid > 0.25 && (season === 'spring' || season === 'summer')) {
+                    const birthRate = 0.045 * (aphid / 0.5) * (1 - lb.adultPopulation / 300);
+                    births = Math.round(lb.adultPopulation * birthRate * 0.3);
+                    births = clamp(births, 0, Math.round(lb.adultPopulation * 0.10));
+                }
+
+                let deaths = 0;
+                const baseMort = 0.02 + (1 - aphid) * 0.02;
+                deaths += Math.round(lb.adultPopulation * baseMort * 0.4);
+
+                if (temp < 5 && lb.adultPopulation > 0) {
+                    deaths += Math.round(lb.adultPopulation * 0.04);
+                }
+                // Senescence
+                if (lb.daysActive > 50) {
+                    deaths += Math.round(lb.adultPopulation * 0.04);
+                }
+
+                let newPop = lb.adultPopulation + births - deaths;
+                newPop = clamp(Math.round(newPop), 0, 320);
+                lb.adultPopulation = newPop;
+
+                if (lb.adultPopulation <= 0) {
+                    lb.adultPopulation = 0;
+                    lb.emergenceTriggered = false;
+                    lb.daysActive = 0;
+                    dom.lbEmerge.textContent = '—';
+                    if (season === 'autumn' || season === 'winter') {
+                        lb.overwintering = true;
+                    }
+                }
+                if (state.frostEvent && lb.adultPopulation > 0) {
+                    lb.adultPopulation = 0;
+                    lb.emergenceTriggered = false;
+                    lb.daysActive = 0;
+                    lb.coldKill = true;
+                    lb.overwintering = true;
+                }
+            } else {
+                if (!lb.overwintering && (season === 'summer' || season === 'autumn')) {
+                    // could re-aggregate later, but simplified
+                }
+            }
+
+            if (lb.overwintering) {
+                lb.aggregationSize = clamp(lb.aggregationSize + 0.001 + rand(0, 0.002), 0.1, 2.5);
+            }
+
+            // Status
+            if (lb.adultPopulation > 0) {
+                dom.ladybeetleStatus.textContent = 'active';
+                dom.ladybeetleStatus.style.color = 'var(--accent-green)';
+            } else if (lb.overwintering) {
+                dom.ladybeetleStatus.textContent = 'overwintering';
+                dom.ladybeetleStatus.style.color = '#e8c87a';
+            } else {
+                dom.ladybeetleStatus.textContent = 'dormant';
+                dom.ladybeetleStatus.style.color = 'var(--text-muted)';
+            }
+        }
+
+        // ---- alerts ----
+        function showAlert(msg, type) {
+            dom.alertMessage.textContent = msg;
+            dom.alertBanner.classList.add('show');
+            dom.alertBanner.style.borderColor = type === 'emerge' ? 'rgba(120,200,120,0.4)' : 'rgba(200,80,70,0.15)';
+            dom.alertBanner.style.background = type === 'emerge' ? 'rgba(120,200,120,0.08)' : 'rgba(200,80,70,0.08)';
+            clearTimeout(window._alertTimeout);
+            window._alertTimeout = setTimeout(() => dom.alertBanner.classList.remove('show'), 5000);
+        }
+
+        // ---- data recording ----
+        function recordDataPoint() {
+            const sd = state.chartData;
+            sd.squirrel.push(state.squirrel.population);
+            sd.cottontail.push(state.cottontail.population);
+            sd.ladybeetle.push(state.ladybeetle.adultPopulation);
+            if (sd.squirrel.length > sd.maxPoints) {
+                sd.squirrel.shift();
+                sd.cottontail.shift();
+                sd.ladybeetle.shift();
+            }
+        }
+
+        // ---- tick ----
+        function tick() {
+            state.tickCount++;
+            state.hour += 0.5;
+            if (state.hour >= 24) {
+                state.hour -= 24;
+                state.day++;
+                state.yearDay++;
+                if (state.yearDay > 365) state.yearDay = 1;
+                state.season = getSeason(state.yearDay);
+                recordDataPoint();
+                state.squirrel.hazardsEncountered = 0;
+                state.squirrel.mortalityToday = 0;
+                state.squirrel.birthsToday = 0;
+                state.cottontail.predatorEncounters = 0;
+                state.cottontail.mortalityToday = 0;
+                state.cottontail.birthsToday = 0;
+                checkFrost();
+            }
+            state.temperature = getTemperature(state.yearDay, state.hour);
+            updateEnvironment();
+            updateSquirrel();
+            updateCottontail();
+            updateLadyBeetle();
+            updateUI();
+            drawChart();
+            if (state.tickCount % 6 === 0) dom.alertBanner.classList.remove('show');
+        }
+
+        // ---- UI update ----
+        function updateUI() {
+            const d = state;
+            const sq = d.squirrel;
+            const ct = d.cottontail;
+            const lb = d.ladybeetle;
+
+            dom.dayDisplay.textContent = d.day;
+            dom.seasonDisplay.textContent = getSeasonName(d.season);
+            dom.tempDisplay.textContent = Math.round(d.temperature) + ' C';
+            const h = Math.floor(d.hour);
+            const m = Math.round((d.hour - h) * 60);
+            dom.timeDisplay.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+
+            const lawnPct = Math.round(d.lawnCoverage * 100);
+            dom.lawnPct.textContent = lawnPct + '%';
+            dom.lawnFill.style.width = lawnPct + '%';
+            dom.lawnVal.textContent = lawnPct;
+
+            const brushPct = Math.round(d.brushCoverage * 100);
+            dom.brushPct.textContent = brushPct + '%';
+            dom.brushFill.style.width = brushPct + '%';
+            dom.brushVal.textContent = brushPct;
+
+            const humanPct = Math.round(d.humanDisturbance * 100);
+            dom.humanPct.textContent = humanPct + '%';
+            dom.humanFill.style.width = humanPct + '%';
+            dom.humanVal.textContent = humanPct;
+
+            const aphidPct = Math.round(d.aphidAbundance * 100);
+            dom.aphidPct.textContent = aphidPct + '%';
+            dom.aphidFill.style.width = aphidPct + '%';
+            dom.aphidVal.textContent = Math.round(d.aphidAbundance * 40);
+
+            const predPct = Math.round(d.predatorPressure * 100);
+            dom.predPct.textContent = predPct + '%';
+            dom.predFill.style.width = predPct + '%';
+            dom.predVal.textContent = Math.round(d.predatorPressure * 8);
+
+            dom.sqPop.textContent = sq.population;
+            dom.sqNests.textContent = `${sq.nestsUsed} / ${sq.maxNests}`;
+            dom.sqCache.textContent = Math.round(sq.foodCache);
+            dom.sqSurvival.textContent = Math.round(sq.winterSurvival * 100) + '%';
+            dom.sqActive.textContent = sq.activeForaging;
+            dom.sqHazards.textContent = sq.hazardsEncountered;
+
+            dom.ctPop.textContent = ct.population;
+            dom.ctBurrows.textContent = `${ct.burrowsUsed} / ${ct.maxBurrows}`;
+            dom.ctForage.textContent = Math.round(ct.forageIntake);
+            dom.ctSurvival.textContent = Math.round(ct.winterSurvival * 100) + '%';
+            dom.ctActive.textContent = ct.activeForaging;
+            dom.ctPred.textContent = ct.predatorEncounters;
+
+            dom.lbAdult.textContent = lb.adultPopulation;
+            dom.lbAgg.textContent = lb.aggregationSize.toFixed(1);
+            dom.lbOverwinter.textContent = lb.overwintering ? 'active' : 'inactive';
+            dom.lbOverwinter.style.color = lb.overwintering ? '#e8c87a' : 'var(--text-muted)';
+            dom.lbDays.textContent = lb.emergenceTriggered ? lb.daysActive + ' days' : '—';
+            dom.lbCold.textContent = lb.coldKill ? 'killed' : 'none';
+            dom.lbCold.style.color = lb.coldKill ? '#e07060' : 'var(--text-muted)';
+
+            if (d.chartData.squirrel.length > 0) dom.chartLatestDay.textContent = `Day ${d.day}`;
+        }
+
+        // ---- chart ----
+        function drawChart() {
+            const W = canvas.clientWidth || canvas.width;
+            const H = canvas.clientHeight || canvas.height;
+            canvas.width = W;
+            canvas.height = H;
+
+            const sd = state.chartData;
+            const sq = sd.squirrel,
+                ct = sd.cottontail,
+                lb = sd.ladybeetle;
+            const len = sq.length;
+
+            ctx.clearRect(0, 0, W, H);
+            if (len < 2) {
+                ctx.fillStyle = 'rgba(255,255,255,0.08)';
+                ctx.font = '14px var(--font)';
+                ctx.textAlign = 'center';
+                ctx.fillText('Waiting for data…', W / 2, H / 2);
+                return;
+            }
+
+            const pad = { top: 14, bottom: 16, left: 8, right: 10 };
+            const chartW = W - pad.left - pad.right;
+            const chartH = H - pad.top - pad.bottom;
+            const allVals = [...sq, ...ct, ...lb];
+            const maxVal = Math.max(1, ...allVals) * 1.15;
+            const xScale = chartW / (len - 1);
+            const yScale = chartH / maxVal;
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 4; i++) {
+                const y = pad.top + chartH - (i / 3) * chartH;
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(pad.left + chartW, y);
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(255,255,255,0.12)';
+                ctx.font = '8px var(--font)';
+                ctx.textAlign = 'right';
+                ctx.fillText(Math.round((i / 3) * maxVal), pad.left - 4, y + 3);
+            }
+
+            drawLine(sq, '#c97e3a', 2.2);
+            drawLine(ct, '#a08060', 2.2);
+            drawLine(lb, '#c06040', 2.2);
+
+            // fills
+            [
+                [sq, 'rgba(201,126,58,0.08)'],
+                [ct, 'rgba(160,128,96,0.08)'],
+                [lb, 'rgba(192,96,64,0.08)']
+            ].forEach(([data, color]) => {
+                ctx.beginPath();
+                ctx.moveTo(pad.left, pad.top + chartH);
+                for (let i = 0; i < len; i++) {
+                    const x = pad.left + i * xScale;
+                    const y = pad.top + chartH - data[i] * yScale;
+                    if (i === 0) ctx.lineTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.lineTo(pad.left + (len - 1) * xScale, pad.top + chartH);
+                ctx.closePath();
+                ctx.fillStyle = color;
+                ctx.fill();
+            });
+
+            // current dots
+            if (len > 0) {
+                const last = len - 1;
+                const xLast = pad.left + last * xScale;
+                [
+                    [sq, '#c97e3a'],
+                    [ct, '#a08060'],
+                    [lb, '#c06040']
+                ].forEach(([data, color]) => {
+                    const y = pad.top + chartH - data[last] * yScale;
+                    ctx.beginPath();
+                    ctx.arc(xLast, y, 5, 0, 2 * Math.PI);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                });
+            }
+
+            function drawLine(data, color, width) {
+                if (data.length < 2) return;
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = width;
+                for (let i = 0; i < data.length; i++) {
+                    const x = pad.left + i * xScale;
+                    const y = pad.top + chartH - data[i] * yScale;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        // ---- config sync ----
+        function syncSlidersFromConfig() {
+            const map = {
+                'slider_sqNests': ['squirrel', 'nestCapacity', 'val_sqNests'],
+                'slider_sqForage': ['squirrel', 'forageRate', 'val_sqForage'],
+                'slider_sqAdapt': ['squirrel', 'humanAdaptation', 'val_sqAdapt'],
+                'slider_sqPred': ['squirrel', 'predatorBase', 'val_sqPred'],
+                'slider_burrowCap': ['cottontail', 'burrowCapacity', 'val_burrowCap'],
+                'slider_ctForage': ['cottontail', 'forageRate', 'val_ctForage'],
+                'slider_ctHuman': ['cottontail', 'humanHazard', 'val_ctHuman'],
+                'slider_ctPred': ['cottontail', 'predatorBase', 'val_ctPred'],
+                'slider_emergeThresh': ['ladybeetle', 'emergenceThreshold', 'val_emergeThresh'],
+                'slider_overwinter': ['ladybeetle', 'overwinterSurvival', 'val_overwinter'],
+                'slider_aphidGrow': ['ladybeetle', 'aphidGrowthRate', 'val_aphidGrow'],
+                'slider_initAgg': ['ladybeetle', 'initialAggregation', 'val_initAgg'],
+            };
+            for (const [sid, [cat, key, displayId]] of Object.entries(map)) {
+                const slider = $(sid);
+                const val = CONFIG[cat][key];
+                slider.value = val;
+                if (displayId) $(displayId).textContent = val;
+            }
+        }
+
+        // ---- init ----
+        function initSim() {
+            state.squirrel.maxNests = CONFIG.squirrel.nestCapacity;
+            state.cottontail.maxBurrows = CONFIG.cottontail.burrowCapacity;
+            state.ladybeetle.aggregationSize = CONFIG.ladybeetle.initialAggregation;
+
+            state.day = 1;
+            state.yearDay = 80;
+            state.hour = 6;
+            state.season = 'spring';
+            state.temperature = getTemperature(state.yearDay, state.hour);
+            state.frostEvent = false;
+
+            const sq = state.squirrel;
+            sq.population = 42;
+            sq.nestsUsed = Math.min(Math.round(42 / 2.0), sq.maxNests);
+            sq.foodCache = 150;
+            sq.winterSurvival = 0.90;
+            sq.activeForaging = 0;
+            sq.hazardsEncountered = 0;
+            sq.mortalityToday = 0;
+            sq.birthsToday = 0;
+            sq._nestCompetition = 0;
+
+            const ct = state.cottontail;
+            ct.population = 28;
+            ct.burrowsUsed = Math.min(Math.round(28 / 1.8), ct.maxBurrows);
+            ct.forageIntake = 30;
+            ct.winterSurvival = 0.85;
+            ct.activeForaging = 0;
+            ct.predatorEncounters = 0;
+            ct.mortalityToday = 0;
+            ct.birthsToday = 0;
+            ct._burrowCompetition = 0;
+
+            const lb = state.ladybeetle;
+            lb.adultPopulation = 0;
+            lb.aggregationSize = CONFIG.ladybeetle.initialAggregation;
+            lb.overwintering = true;
+            lb.emergenceTriggered = false;
+            lb.daysActive = 0;
+            lb.coldKill = false;
+            lb._emergenceDay = -1;
+
+            state.chartData.squirrel = [];
+            state.chartData.cottontail = [];
+            state.chartData.ladybeetle = [];
+            state.running = true;
+            state.tickCount = 0;
+
+            dom.playBtn.textContent = 'Pause';
+            dom.alertBanner.classList.remove('show');
+            document.querySelectorAll('.emerging').forEach(el => el.classList.remove('emerging'));
+
+            recordDataPoint();
+            updateUI();
+            drawChart();
+            syncSlidersFromConfig();
+        }
+
+        // ---- controls ----
+        function togglePlay() {
+            state.running = !state.running;
+            dom.playBtn.textContent = state.running ? 'Pause' : 'Play';
+            if (state.running) startLoop();
+            else stopLoop();
+        }
+
+        function stepOnce() { if (!state.running) tick(); }
+
+        function resetSim() {
+            stopLoop();
+            for (const [cat, vals] of Object.entries(DEFAULTS)) {
+                for (const [key, val] of Object.entries(vals)) {
+                    CONFIG[cat][key] = val;
+                }
+            }
+            initSim();
+            syncSlidersFromConfig();
+            if (state.running) startLoop();
+        }
+
+        function updateSpeed() {
+            const val = parseInt(dom.speedSlider.value);
+            state.speed = val;
+            dom.speedLabel.textContent = val + 'x';
+            if (state.running) { stopLoop();
+                startLoop(); }
+        }
+
+        let loopInterval = null;
+
+        function startLoop() {
+            stopLoop();
+            const interval = Math.max(50, 1000 / state.speed);
+            loopInterval = setInterval(() => { if (state.running) tick(); }, interval);
+        }
+
+        function stopLoop() { if (loopInterval) { clearInterval(loopInterval);
+                loopInterval = null; } }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => drawChart(), 100);
+        });
+
+        initSim();
+        startLoop();
+
+        window.togglePlay = togglePlay;
+        window.stepOnce = stepOnce;
+        window.resetSim = resetSim;
+        window.updateSpeed = updateSpeed;
+        window.toggleSettings = toggleSettings;
+        window.updateConfig = updateConfig;
+    </script>
+
+</body>
+</html>
