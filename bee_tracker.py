@@ -1,4 +1,5 @@
 import os
+import math
 from datetime import datetime
 import cv2
 from hachoir.metadata import extractMetadata
@@ -130,26 +131,50 @@ for track_id, data in bee_tracks.items():
 
 raw_visits = sorted(raw_visits, key=lambda x: x["first_frame"])
 
-MAX_GAP_FRAMES = RE_ENTRY_SECONDS * FPS
+TAU = 15.0  # Time decay factor in seconds
+D_MAX = 500.0  # Spatial decay factor in pixels (e.g., frame diagonal)
+PROBABILITY_THRESHOLD = 0.50  # If P > 50%, treat as the same returning bee
+
 filtered_events = []
 current_event_id = 1
-last_seen_frame = -999999
+
+# Store spatial exit points: { track_id: {"exit_x": float, "exit_y": float, "last_frame": int} }
+last_event = None
 
 for visit in raw_visits:
-    gap = visit["first_frame"] - last_seen_frame
-
-    if gap <= MAX_GAP_FRAMES and len(filtered_events) > 0:
-        visit["unique_bee_event_id"] = filtered_events[-1][
-            "unique_bee_event_id"
-        ]
-        visit["visit_type"] = "Re-entry / Repeat Visit"
-    else:
+    if last_event is None:
+        # First detected bee
         visit["unique_bee_event_id"] = f"BEE_EVENT_{current_event_id:03d}"
-        current_event_id += 1
+        visit["reentry_probability"] = 0.0
         visit["visit_type"] = "New Unique Individual"
+        current_event_id += 1
+    else:
+        # Calculate time difference (delta_t) in seconds
+        frame_gap = visit["first_frame"] - last_event["last_frame"]
+        delta_t = frame_gap / FPS
 
-    last_seen_frame = visit["last_frame"]
+        # Calculate spatial distance (delta_d) between exit and entry coordinates
+        dx = visit["entry_x"] - last_event["exit_x"]
+        dy = visit["entry_y"] - last_event["exit_y"]
+        delta_d = math.sqrt(dx**2 + dy**2)
+
+        # Calculate Same-Bee Probability using the decay equation
+        p_same = math.exp(-((delta_t / TAU) + (delta_d / D_MAX)))
+        visit["reentry_probability"] = round(p_same, 3)
+
+        if p_same >= PROBABILITY_THRESHOLD:
+            # High probability it's the same returning bee
+            visit["unique_bee_event_id"] = last_event["unique_bee_event_id"]
+            visit["visit_type"] = f"Re-entry (P={p_same:.0%})"
+        else:
+            # Low probability; count as a new unique individual
+            visit["unique_bee_event_id"] = f"BEE_EVENT_{current_event_id:03d}"
+            visit["visit_type"] = "New Unique Individual"
+            current_event_id += 1
+
+    last_event = visit
     filtered_events.append(visit)
+
 df_new = pd.DataFrame(filtered_events)
 if os.path.exists(OUTPUT_CSV):
     df_existing = pd.read_csv(OUTPUT_CSV)
