@@ -14,23 +14,20 @@
     }
 
     body {
-      background: #f7fcf3;
+      background: #f0f7ec;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1.5rem 1.5rem 3rem 1.5rem;
       position: relative;
       overflow-x: hidden;
     }
 
+    /* ---- pollinator background ---- */
     .pollinator-bg {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 0;
       overflow: hidden;
-      opacity: 0.2;
+      opacity: 0.15;
     }
 
     .pollinator-bg i {
@@ -56,23 +53,26 @@
       100% { transform: translate(15px, 30px) rotate(4deg) scale(1.02); }
     }
 
-    /* GIF BANNER - REPLACES VIDEO */
-    .gif-banner {
+    /* ---- main content wrapper (no bubble) ---- */
+    .content {
       position: relative;
       z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem 2rem;
+    }
+
+    /* ---- GIF BANNER (full width, no bubble) ---- */
+    .gif-banner {
       width: 100%;
-      max-width: 1100px;
-      border-radius: 40px 40px 24px 24px;
-      overflow: hidden;
-      box-shadow: 0 12px 30px rgba(40, 70, 30, 0.15);
-      margin-bottom: 1.8rem;
-      background: #1a2a1a;
       aspect-ratio: 21 / 9;
       min-height: 200px;
-      border: 1px solid rgba(180, 210, 150, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      margin: 1.5rem 0 2.5rem 0;
+      border-radius: 0px;
+      overflow: hidden;
+      background: #1a2a1a;
+      position: relative;
+      box-shadow: 0 8px 30px rgba(40, 70, 30, 0.1);
     }
 
     .gif-banner img {
@@ -82,7 +82,6 @@
       display: block;
     }
 
-    /* GIF placeholder when it can't load */
     .gif-placeholder {
       position: absolute;
       inset: 0;
@@ -103,60 +102,64 @@
       color: rgba(200, 220, 180, 0.3);
     }
 
-    .gif-banner-overlay {
+    .gif-overlay {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 30%;
-      background: linear-gradient(to top, rgba(20, 30, 20, 0.4), transparent);
+      height: 40%;
+      background: linear-gradient(to top, rgba(20, 30, 20, 0.3), transparent);
       pointer-events: none;
       z-index: 2;
     }
 
-    .project-card {
-      position: relative;
-      z-index: 2;
-      max-width: 1100px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.78);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border-radius: 40px 40px 40px 40px;
-      box-shadow: 0 25px 50px -10px rgba(40, 70, 30, 0.2),
-                  0 0 0 1px rgba(180, 210, 150, 0.15);
-      padding: 2.5rem 2.8rem;
-      transition: all 0.2s ease;
-      border: 1px solid rgba(200, 225, 170, 0.25);
+    /* ---- Project Title (no bubble) ---- */
+    .project-title-area {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid rgba(120, 160, 100, 0.15);
     }
 
-    .project-card > * {
-      opacity: 0;
-      animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
-    }
-    .project-card > *:nth-child(1) { animation-delay: 0.05s; }
-    .project-card > *:nth-child(2) { animation-delay: 0.10s; }
-    .project-card > *:nth-child(3) { animation-delay: 0.15s; }
-    .project-card > *:nth-child(4) { animation-delay: 0.20s; }
-    .project-card > *:nth-child(5) { animation-delay: 0.25s; }
-
-    @keyframes fadeSlideUp {
-      0% { opacity: 0; transform: translateY(16px); }
-      100% { opacity: 1; transform: translateY(0); }
+    .project-title-area h1 {
+      font-size: 3.2rem;
+      font-weight: 500;
+      color: #1f3a1f;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
     }
 
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      color: #3a5e3a;
-      border-bottom: 2px solid rgba(120, 160, 100, 0.3);
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.2rem;
+    .project-title-area h1 span {
+      font-weight: 300;
+      color: #3a6e3a;
+    }
+
+    .project-subtitle {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      color: #4f6e4f;
+      opacity: 0.7;
+      letter-spacing: 0.3px;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+
+    .project-subtitle i {
+      color: #6e9b5e;
+    }
+
+    /* ---- Section Titles (no bubble) ---- */
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #2d4a2d;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(120, 160, 100, 0.15);
     }
 
     .section-title i {
@@ -165,69 +168,55 @@
       opacity: 0.7;
     }
 
-    .blank-placeholder {
-      background: rgba(200, 215, 180, 0.15);
-      border: 2px dashed rgba(90, 130, 80, 0.25);
-      border-radius: 28px;
-      padding: 1.8rem 1.5rem;
-      min-height: 90px;
+    /* ---- Blank sections (no bubble, just dashed area) ---- */
+    .blank-content {
+      background: rgba(200, 215, 180, 0.08);
+      border: 2px dashed rgba(90, 130, 80, 0.2);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      min-height: 80px;
       color: #3a553a;
       font-weight: 400;
-      transition: background 0.2s;
-      margin-bottom: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.95rem;
       letter-spacing: 0.3px;
-      background: rgba(235, 245, 220, 0.2);
+      transition: background 0.2s;
     }
 
-    .blank-placeholder i {
+    .blank-content i {
       margin-right: 0.75rem;
-      opacity: 0.5;
+      opacity: 0.4;
       font-size: 1.1rem;
     }
 
-    .project-title-area {
-      margin-bottom: 2.2rem;
-    }
-    .project-title-area h1 {
-      font-size: 2.6rem;
-      font-weight: 500;
-      color: #1f3a1f;
-      letter-spacing: -0.02em;
-      border-left: 6px solid #6e9b5e;
-      padding-left: 1.2rem;
-      line-height: 1.2;
+    .blank-content:hover {
+      background: rgba(200, 215, 180, 0.15);
     }
 
+    /* ---- Involvement section ---- */
     .involvement-area {
-      margin: 2.2rem 0 2.2rem 0;
+      margin: 2.5rem 0 2.5rem 0;
     }
 
+    /* ---- Media row (YouTube + Download) ---- */
     .media-row {
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
-      margin: 2.2rem 0 2.2rem 0;
+      margin: 2.5rem 0 2.5rem 0;
       align-items: stretch;
     }
 
     .video-wrapper {
       flex: 2;
-      min-width: 280px;
-      background: #e9f1e2;
-      border-radius: 32px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-      border: 1px solid rgba(160, 190, 140, 0.3);
-      transition: box-shadow 0.25s;
-      aspect-ratio: 16 / 9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-width: 300px;
       background: #dce8d2;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     .video-wrapper iframe {
@@ -239,17 +228,16 @@
 
     .download-area {
       flex: 1;
-      min-width: 180px;
+      min-width: 200px;
       background: #eef6e8;
-      border-radius: 32px;
-      padding: 1.5rem 1.8rem;
+      border-radius: 12px;
+      padding: 2rem 1.8rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      border: 1px solid rgba(150, 180, 130, 0.2);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      border: 1px solid rgba(150, 180, 130, 0.15);
     }
 
     .download-btn {
@@ -258,18 +246,17 @@
       color: white;
       font-size: 1.2rem;
       font-weight: 500;
-      padding: 0.9rem 1.8rem;
-      border-radius: 60px;
+      padding: 1rem 2rem;
+      border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 6px 14px rgba(60, 110, 50, 0.2);
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
       gap: 0.8rem;
-      border: 1px solid #3d6e3d;
       letter-spacing: 0.3px;
       width: 100%;
       justify-content: center;
+      border: 1px solid #3d6e3d;
     }
 
     .download-btn i {
@@ -278,108 +265,125 @@
 
     .download-btn:hover {
       background: #1f451f;
-      transform: scale(1.02);
-      box-shadow: 0 10px 22px rgba(50, 100, 40, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(50, 100, 40, 0.2);
     }
 
     .download-btn:active {
-      transform: scale(0.97);
+      transform: translateY(0);
     }
 
     .download-hint {
       margin-top: 0.8rem;
       font-size: 0.85rem;
       color: #3a5a3a;
-      opacity: 0.6;
+      opacity: 0.5;
       font-weight: 400;
     }
 
+    /* ---- Progress & Findings grid ---- */
     .progress-findings {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.8rem;
-      margin-top: 2rem;
+      gap: 2rem;
+      margin-top: 2.5rem;
     }
 
     .progress-box, .findings-box {
-      background: rgba(235, 245, 220, 0.25);
-      backdrop-filter: blur(2px);
-      border-radius: 32px;
+      background: rgba(235, 245, 220, 0.15);
+      border-radius: 12px;
       padding: 1.5rem 1.8rem 1.8rem 1.8rem;
-      border: 1px solid rgba(170, 200, 150, 0.2);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      border: 1px solid rgba(170, 200, 150, 0.1);
       transition: all 0.2s;
+    }
+
+    .progress-box:hover, .findings-box:hover {
+      background: rgba(235, 245, 220, 0.25);
     }
 
     .progress-box .section-title, 
     .findings-box .section-title {
       margin-bottom: 1rem;
-      border-bottom-color: rgba(120, 160, 100, 0.2);
+      border-bottom-color: rgba(120, 160, 100, 0.1);
     }
 
-    .blank-content {
-      min-height: 90px;
-      background: rgba(200, 215, 180, 0.08);
-      border-radius: 24px;
-      padding: 1rem 1.2rem;
-      display: flex;
-      align-items: center;
-      color: #3f5e3f;
-      border: 1px dashed rgba(110, 150, 90, 0.2);
-      font-weight: 300;
-      letter-spacing: 0.3px;
+    .progress-box .blank-content,
+    .findings-box .blank-content {
+      min-height: 80px;
     }
 
-    .blank-content i {
-      margin-right: 0.8rem;
-      opacity: 0.4;
-    }
-
-    .note {
-      font-size: 0.8rem;
+    /* ---- Footer note ---- */
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid rgba(120, 160, 100, 0.1);
+      text-align: center;
+      font-size: 0.85rem;
       color: #4a6a4a;
       opacity: 0.5;
-      margin-top: 0.6rem;
-      text-align: right;
+      letter-spacing: 0.5px;
     }
 
-    @media (max-width: 700px) {
-      .project-card {
-        padding: 1.8rem 1.2rem;
-        border-radius: 32px;
+    .footer-note i {
+      margin-right: 6px;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .content {
+        padding: 0 1.2rem 3rem 1.2rem;
       }
+
       .project-title-area h1 {
-        font-size: 2.0rem;
-        padding-left: 0.9rem;
+        font-size: 2.2rem;
       }
+
+      .gif-banner {
+        aspect-ratio: 16 / 7;
+        margin: 1rem 0 1.5rem 0;
+      }
+
       .media-row {
         flex-direction: column;
       }
+
+      .video-wrapper {
+        min-width: 0;
+      }
+
+      .download-area {
+        padding: 1.5rem;
+      }
+
       .progress-findings {
         grid-template-columns: 1fr;
         gap: 1.2rem;
       }
-      .download-area {
-        padding: 1.5rem 1rem;
-      }
-      .gif-banner {
-        border-radius: 28px 28px 16px 16px;
-        aspect-ratio: 16 / 7;
+
+      .section-title {
+        font-size: 1.1rem;
       }
     }
 
     @media (max-width: 480px) {
+      .content {
+        padding: 0 0.8rem 2rem 0.8rem;
+      }
+
       .project-title-area h1 {
         font-size: 1.7rem;
       }
-      .blank-placeholder {
-        padding: 1.2rem 0.8rem;
-        min-height: 70px;
-        font-size: 0.9rem;
-      }
+
       .gif-banner {
         aspect-ratio: 16 / 6;
-        border-radius: 20px;
+        min-height: 120px;
+        margin: 0.5rem 0 1rem 0;
+      }
+
+      .blank-content {
+        padding: 1.2rem 1rem;
+        min-height: 60px;
+        font-size: 0.85rem;
       }
     }
   </style>
@@ -398,52 +402,49 @@
 </div>
 
 <!-- ============================================= -->
-<!-- GIF BANNER - CHANGE "showcase.gif" BELOW      -->
+<!-- MAIN CONTENT - NO BUBBLES                     -->
 <!-- ============================================= -->
-<div class="gif-banner">
-  <!-- 
-    🔧 CHANGE THIS: Replace "showcase.gif" with your actual GIF filename
-    Make sure the filename matches EXACTLY (case sensitive!)
-    Example: if your GIF is "pollinator.gif", change it to that
-  -->
-  <img src="showcase.gif" alt="Pollinator showcase animation" id="gifImage">
-  
-  <!-- Placeholder text that shows if GIF fails to load -->
-  <div class="gif-placeholder" id="gifPlaceholder">
-    <i class="fas fa-image"></i>
-    <span>Loading GIF...</span>
-    <span style="font-size: 0.8rem; opacity: 0.5;">If you see this, check your GIF file</span>
+<div class="content">
+
+  <!-- ===== GIF BANNER ===== -->
+  <div class="gif-banner">
+    <!-- 
+      🔧 CHANGE THIS: Replace "showcase.gif" with your actual GIF filename
+    -->
+    <img src="showcase.gif" alt="Pollinator showcase animation" id="gifImage">
+    
+    <div class="gif-placeholder" id="gifPlaceholder">
+      <i class="fas fa-image"></i>
+      <span>Loading GIF...</span>
+      <span style="font-size: 0.8rem; opacity: 0.5;">Make sure showcase.gif is in the same folder</span>
+    </div>
+    
+    <div class="gif-overlay"></div>
   </div>
-  
-  <div class="gif-banner-overlay"></div>
-</div>
 
-<main class="project-card">
-
-  <!-- Project Title -->
+  <!-- ===== PROJECT TITLE ===== -->
   <section class="project-title-area">
-    <h1>Project · <span style="font-weight:300;">[ your project ]</span></h1>
-    <div style="margin-top: 0.3rem; font-size: 0.95rem; color: #4f6e4f; opacity: 0.7; letter-spacing: 0.3px; border-left: 2px solid #8fb07f; padding-left: 1rem;">
-      <i class="fas fa-seedling" style="margin-right: 0.4rem;"></i> pollinator initiative
+    <h1>Project · <span>[ your project ]</span></h1>
+    <div class="project-subtitle">
+      <i class="fas fa-seedling"></i> pollinator initiative
     </div>
   </section>
 
-  <!-- How You Can Get Involved -->
+  <!-- ===== HOW YOU CAN GET INVOLVED ===== -->
   <section class="involvement-area">
     <div class="section-title">
       <i class="fas fa-hands-helping"></i> How you can get involved
     </div>
-    <div class="blank-placeholder">
+    <div class="blank-content">
       <i class="fas fa-pencil-alt"></i> <span>[ your content here ]</span>
     </div>
   </section>
 
-  <!-- YouTube Video + Download -->
+  <!-- ===== YOUTUBE VIDEO + DOWNLOAD ===== -->
   <div class="media-row">
     <div class="video-wrapper">
       <!-- 
         🔧 CHANGE YOUTUBE VIDEO: Replace "dQw4w9WgXcQ" with your video ID
-        Example: if your URL is youtube.com/watch?v=ABC123, change to ABC123
       -->
       <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=3IxLbLZvY8P5fQ9_" 
               title="YouTube video player" 
@@ -460,13 +461,13 @@
       <div class="download-hint">
         <i class="fas fa-arrow-right" style="font-size: 0.7rem;"></i> separate file (you provide)
       </div>
-      <div style="margin-top: 0.6rem; font-size: 0.7rem; color: #3d5e3d; opacity: 0.4;">
+      <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #3d5e3d; opacity: 0.3;">
         <i class="fas fa-file"></i> placeholder
       </div>
     </div>
   </div>
 
-  <!-- Current Progress + Confirmed Findings -->
+  <!-- ===== CURRENT PROGRESS + CONFIRMED FINDINGS ===== -->
   <div class="progress-findings">
     <div class="progress-box">
       <div class="section-title">
@@ -487,10 +488,12 @@
     </div>
   </div>
 
-  <div class="note">
-    <i class="fas fa-leaf" style="margin-right: 4px;"></i> pollinator · project
+  <!-- ===== FOOTER ===== -->
+  <div class="footer-note">
+    <i class="fas fa-leaf"></i> pollinator · project
   </div>
-</main>
+
+</div>
 
 <script>
   // Hide placeholder when GIF loads
@@ -503,7 +506,6 @@
     });
     
     gifImage.addEventListener('error', function() {
-      // Show error message in placeholder
       gifPlaceholder.innerHTML = `
         <i class="fas fa-exclamation-triangle"></i>
         <span>GIF not found</span>
