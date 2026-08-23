@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pollinator · project</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: #f7fcf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1.5rem 3rem 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ---- pollinator background (subtle, modern) ---- */
+    .pollinator-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      opacity: 0.2;
+    }
+
+    .pollinator-bg i {
+      position: absolute;
+      font-size: 3.2rem;
+      color: #3b6e3b;
+      animation: floatPollinator 22s infinite alternate ease-in-out;
+      will-change: transform;
+    }
+
+    .pollinator-bg i:nth-child(1) { top: 8%; left: 5%; animation-duration: 19s; font-size: 3.8rem; }
+    .pollinator-bg i:nth-child(2) { top: 20%; right: 8%; animation-duration: 26s; font-size: 4.2rem; }
+    .pollinator-bg i:nth-child(3) { bottom: 25%; left: 12%; animation-duration: 21s; font-size: 3rem; }
+    .pollinator-bg i:nth-child(4) { bottom: 10%; right: 15%; animation-duration: 24s; font-size: 4.8rem; }
+    .pollinator-bg i:nth-child(5) { top: 55%; left: 80%; animation-duration: 18s; font-size: 3.5rem; }
+    .pollinator-bg i:nth-child(6) { top: 70%; left: 25%; animation-duration: 28s; font-size: 4rem; }
+    .pollinator-bg i:nth-child(7) { top: 5%; left: 45%; animation-duration: 20s; font-size: 3.2rem; }
+
+    @keyframes floatPollinator {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      33% { transform: translate(30px, -25px) rotate(8deg) scale(1.05); }
+      66% { transform: translate(-20px, 20px) rotate(-5deg) scale(0.95); }
+      100% { transform: translate(15px, 30px) rotate(4deg) scale(1.02); }
+    }
+
+    /* ---- VIDEO BANNER (top of page, like a GIF) ---- */
+    .video-banner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 40px 40px 24px 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(40, 70, 30, 0.15);
+      margin-bottom: 1.8rem;
+      background: #1f2e1f;
+      aspect-ratio: 21 / 9;
+      background: #2f452f;
+      transition: all 0.2s;
+      border: 1px solid rgba(180, 210, 150, 0.15);
+    }
+
+    .video-banner video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #1f2e1f;
+    }
+
+    /* fallback text if video fails */
+    .video-banner .fallback-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(220, 240, 200, 0.4);
+      font-size: 1.2rem;
+      letter-spacing: 0.5px;
+      background: #2a3f2a;
+      pointer-events: none;
+      font-weight: 300;
+    }
+
+    /* ---- card container (glass / modern) ---- */
+    .project-card {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 40px 40px 40px 40px;
+      box-shadow: 0 25px 50px -10px rgba(40, 70, 30, 0.2),
+                  0 0 0 1px rgba(180, 210, 150, 0.15);
+      padding: 2.5rem 2.8rem;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(200, 225, 170, 0.25);
+    }
+
+    /* smooth animations on load */
+    .project-card > * {
+      opacity: 0;
+      animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    }
+    .project-card > *:nth-child(1) { animation-delay: 0.05s; }
+    .project-card > *:nth-child(2) { animation-delay: 0.10s; }
+    .project-card > *:nth-child(3) { animation-delay: 0.15s; }
+    .project-card > *:nth-child(4) { animation-delay: 0.20s; }
+    .project-card > *:nth-child(5) { animation-delay: 0.25s; }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(16px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- sections ---- */
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #3a5e3a;
+      border-bottom: 2px solid rgba(120, 160, 100, 0.3);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title i {
+      font-size: 1.2rem;
+      color: #4f7a4f;
+      opacity: 0.7;
+    }
+
+    .blank-placeholder {
+      background: rgba(200, 215, 180, 0.15);
+      border: 2px dashed rgba(90, 130, 80, 0.25);
+      border-radius: 28px;
+      padding: 1.8rem 1.5rem;
+      min-height: 90px;
+      color: #3a553a;
+      font-weight: 400;
+      transition: background 0.2s;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      background: rgba(235, 245, 220, 0.2);
+    }
+
+    .blank-placeholder i {
+      margin-right: 0.75rem;
+      opacity: 0.5;
+      font-size: 1.1rem;
+    }
+
+    /* top project section */
+    .project-title-area {
+      margin-bottom: 2.2rem;
+    }
+    .project-title-area h1 {
+      font-size: 2.6rem;
+      font-weight: 500;
+      color: #1f3a1f;
+      letter-spacing: -0.02em;
+      border-left: 6px solid #6e9b5e;
+      padding-left: 1.2rem;
+      line-height: 1.2;
+    }
+
+    /* involvement */
+    .involvement-area {
+      margin: 2.2rem 0 2.2rem 0;
+    }
+
+    /* video + download row */
+    .media-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 2.2rem 0 2.2rem 0;
+      align-items: stretch;
+    }
+
+    .video-wrapper {
+      flex: 2;
+      min-width: 280px;
+      background: #e9f1e2;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      border: 1px solid rgba(160, 190, 140, 0.3);
+      transition: box-shadow 0.25s;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #dce8d2;
+    }
+
+    .video-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .video-placeholder-text {
+      color: #3b5f3b;
+      font-weight: 400;
+      font-size: 1.1rem;
+      background: rgba(200, 215, 180, 0.2);
+      padding: 1rem 2rem;
+      border-radius: 60px;
+      backdrop-filter: blur(2px);
+    }
+
+    .download-area {
+      flex: 1;
+      min-width: 180px;
+      background: #eef6e8;
+      border-radius: 32px;
+      padding: 1.5rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid rgba(150, 180, 130, 0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      transition: all 0.2s;
+    }
+
+    .download-btn {
+      background: #2d5a2d;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      padding: 0.9rem 1.8rem;
+      border-radius: 60px;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(60, 110, 50, 0.2);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      border: 1px solid #3d6e3d;
+      letter-spacing: 0.3px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .download-btn i {
+      font-size: 1.2rem;
+    }
+
+    .download-btn:hover {
+      background: #1f451f;
+      transform: scale(1.02);
+      box-shadow: 0 10px 22px rgba(50, 100, 40, 0.25);
+    }
+
+    .download-btn:active {
+      transform: scale(0.97);
+    }
+
+    .download-hint {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      color: #3a5a3a;
+      opacity: 0.6;
+      font-weight: 400;
+    }
+
+    /* progress & findings grid */
+    .progress-findings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.8rem;
+      margin-top: 2rem;
+    }
+
+    .progress-box, .findings-box {
+      background: rgba(235, 245, 220, 0.25);
+      backdrop-filter: blur(2px);
+      border-radius: 32px;
+      padding: 1.5rem 1.8rem 1.8rem 1.8rem;
+      border: 1px solid rgba(170, 200, 150, 0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      transition: all 0.2s;
+    }
+
+    .progress-box .section-title, 
+    .findings-box .section-title {
+      margin-bottom: 1rem;
+      border-bottom-color: rgba(120, 160, 100, 0.2);
+    }
+
+    .blank-content {
+      min-height: 90px;
+      background: rgba(200, 215, 180, 0.08);
+      border-radius: 24px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      color: #3f5e3f;
+      border: 1px dashed rgba(110, 150, 90, 0.2);
+      font-weight: 300;
+      letter-spacing: 0.3px;
+    }
+
+    .blank-content i {
+      margin-right: 0.8rem;
+      opacity: 0.4;
+    }
+
+    /* small screens */
+    @media (max-width: 700px) {
+      .project-card {
+        padding: 1.8rem 1.2rem;
+        border-radius: 32px;
+      }
+      .project-title-area h1 {
+        font-size: 2.0rem;
+        padding-left: 0.9rem;
+      }
+      .media-row {
+        flex-direction: column;
+      }
+      .progress-findings {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      .download-area {
+        padding: 1.5rem 1rem;
+      }
+      .video-banner {
+        border-radius: 28px 28px 16px 16px;
+        aspect-ratio: 16 / 7;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .project-title-area h1 {
+        font-size: 1.7rem;
+      }
+      .blank-placeholder {
+        padding: 1.2rem 0.8rem;
+        min-height: 70px;
+        font-size: 0.9rem;
+      }
+      .video-banner {
+        aspect-ratio: 16 / 6;
+        border-radius: 20px;
+      }
+    }
+
+    .soft-icon {
+      color: #4a734a;
+      opacity: 0.6;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(120, 160, 100, 0.2), transparent);
+      margin: 0.5rem 0 1.5rem 0;
+    }
+    .note {
+      font-size: 0.8rem;
+      color: #4a6a4a;
+      opacity: 0.5;
+      margin-top: 0.6rem;
+      text-align: right;
+    }
+
+    /* extra: video banner subtle overlay */
+    .video-banner-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 30%;
+      background: linear-gradient(to top, rgba(20, 30, 20, 0.25), transparent);
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Pollinator background (font awesome icons) -->
+<div class="pollinator-bg">
+  <i class="fas fa-bug"></i>
+  <i class="fas fa-seedling"></i>
+  <i class="fas fa-leaf"></i>
+  <i class="fas fa-tree"></i>
+  <i class="fas fa-flower"></i>
+  <i class="fas fa-leaf"></i>
+  <i class="fas fa-feather-alt"></i>
+</div>
+
+<!-- ===== VIDEO BANNER (top, like a GIF) ===== -->
+<div class="video-banner">
+  <!-- Replace the 'src' with your own video file (MP4, WebM, etc.) -->
+  <video autoplay loop muted playsinline>
+    <source src="banner.mp4" type="video/mp4">
+    <!-- fallback: if video not supported -->
+    Your browser does not support the video tag.
+  </video>
+  <div class="fallback-text">
+    <i class="fas fa-play-circle" style="margin-right: 8px;"></i> video banner
+  </div>
+  <!-- subtle gradient overlay (optional) -->
+  <div class="video-banner-overlay"></div>
+</div>
+
+<main class="project-card">
+
+  <!-- 1. TOP: project title (you fill) -->
+  <section class="project-title-area">
+    <h1>Project · <span style="font-weight:300;">[ your project ]</span></h1>
+    <div style="margin-top: 0.3rem; font-size: 0.95rem; color: #4f6e4f; opacity: 0.7; letter-spacing: 0.3px; border-left: 2px solid #8fb07f; padding-left: 1rem;">
+      <i class="fas fa-seedling" style="margin-right: 0.4rem;"></i> pollinator initiative
+    </div>
+  </section>
+
+  <!-- 2. HOW YOU CAN GET INVOLVED (blank for you) -->
+  <section class="involvement-area">
+    <div class="section-title">
+      <i class="fas fa-hands-helping"></i> How you can get involved
+    </div>
+    <div class="blank-placeholder">
+      <i class="fas fa-pencil-alt"></i> <span>[ your content here ]</span>
+    </div>
+  </section>
+
+  <!-- 3. VIDEO (YT embed) + DOWNLOAD BUTTON row -->
+  <div class="media-row">
+    <!-- YouTube video area (you replace src) -->
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=3IxLbLZvY8P5fQ9_" 
+              title="YouTube video player" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerpolicy="strict-origin-when-cross-origin" 
+              allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- download button (separate file later) -->
+    <div class="download-area">
+      <button class="download-btn" id="downloadBtn">
+        <i class="fas fa-download"></i> Download file
+      </button>
+      <div class="download-hint">
+        <i class="fas fa-arrow-right" style="font-size: 0.7rem;"></i> separate file (you provide)
+      </div>
+      <div style="margin-top: 0.6rem; font-size: 0.7rem; color: #3d5e3d; opacity: 0.4;">
+        <i class="fas fa-file"></i> placeholder
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. CURRENT PROGRESS + CONFIRMED FINDINGS -->
+  <div class="progress-findings">
+    <div class="progress-box">
+      <div class="section-title">
+        <i class="fas fa-chart-line"></i> Current progress
+      </div>
+      <div class="blank-content">
+        <i class="fas fa-circle-notch"></i> <span>[ fill with progress ]</span>
+      </div>
+    </div>
+
+    <div class="findings-box">
+      <div class="section-title">
+        <i class="fas fa-check-circle"></i> Confirmed findings
+      </div>
+      <div class="blank-content">
+        <i class="fas fa-flask"></i> <span>[ fill with findings ]</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <i class="fas fa-leaf" style="margin-right: 4px;"></i> pollinator · project
+  </div>
+</main>
+
+<!-- simple JS for download button (demo) -->
+<script>
+  (function() {
+    const btn = document.getElementById('downloadBtn');
+    if (btn) {
+      btn.addEventListener('click', function(e) {
+        alert('You will attach a separate file here. Replace the download logic with your file URL.');
+      });
+    }
+  })();
+</script>
+</body>
+</html>
