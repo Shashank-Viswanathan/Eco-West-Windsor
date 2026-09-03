@@ -424,9 +424,11 @@
 
   <!-- ===== PROJECT TITLE ===== -->
   <section class="project-title-area">
-    <h1>Project · <span>[ your project ]</span></h1>
+    <h1>OpenBee Monitor</h1>
     <div class="project-subtitle">
-      <i class="fas fa-seedling"></i> pollinator initiative
+      <i class="fas fa-seedling"></i> The development of Global BeeWatch was motivated by an intention to make the process of pollinator observation more scalable, reliable and less intrusive for the insects themselves. In most cases, traditional pollinator observation methods involve manual watching and logging by scientists or volunteers who need to be physically present near the flowers at all times. Our technology implements a standardized physical observation frame together with the use of a smartphone video and computer vision to automate the process of observing and tracking the activities of the pollinators. As a result, observations could be conducted without a need for the researcher to be present near the flowers. Moreover, automation also provides a reliable means of making observations consistently across different habitats.
+      <!--equation 1011 -->
+      <i class="fas fa-seedling"></i> One of the key technical problems solved by us was double counting, when the same bee could go out of the field of view of the camera and come back at a later time, leading to the tracker seeing the insect as another bee. For this problem, we employed the use of the spatiotemporal probability model, which takes into account both the amount of time that has passed since the insect has gone out of view (Δt), as well as the distance covered by it (Δd). This model calculates the probability of whether the insect seen again is indeed the same one as before, thus helping the program separate the true re-appearance from the false one. By using the mathematical method in the computer vision algorithm, Global BeeWatch not only detects insects on videos but tries to provide more accurate measurements of their visit.
     </div>
   </section>
 
@@ -436,7 +438,7 @@
       <i class="fas fa-hands-helping"></i> How you can get involved
     </div>
     <div class="blank-content">
-      <i class="fas fa-pencil-alt"></i> <span>[ your content here ]</span>
+      <i class="fas fa-pencil-alt"></i>Global BeeWatch is an initiative that anyone can take part in by mounting the standardized pollinator observation stand above the flowering patch and capturing a brief video clip of the pollinators visiting the flower. The stand offers the same 15 × 15 cm observation space equipped with raised 1 cm measurement studs giving the computer vision algorithm a fixed scale for measuring insect motion and behavior. The participants may either make their own stand using instructions offered in our YouTube video, 3D print the stand using the available OpenSCAD/STL files, or order the pre-assembled stand from us. After the installation of the stand above the flowering patch, one needs to mount the phone/camera, capture the flowering patch in action within a few minutes, and send us a video file together with the basic information like the date, temperature, weather conditions, patch size, and camera elevation.
     </div>
   </section>
 
