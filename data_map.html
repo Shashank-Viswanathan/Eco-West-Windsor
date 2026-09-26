@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Map Data Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333333;
+    }
+
+    .top-bar {
+      background-color: #ffffff;
+      padding: 10px 15px;
+      border-bottom: 1px solid #cccccc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .view-data-btn {
+      background-color: #e0e0e0;
+      color: #000000;
+      border: 1px solid #888888;
+      padding: 6px 12px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .notice {
+      font-size: 13px;
+      color: #555555;
+    }
+
+    #map {
+      height: calc(100vh - 50px);
+      width: 100%;
+    }
+
+    .data-box {
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 5px;
+    }
+
+    .data-box p {
+      margin: 3px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="Global_BeeWatch_synthetic_program_output.csv" class="view-data-btn" target="_blank">View Data</a>
+    <span class="notice">Video is not available due to privacy reasons.</span>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([20, 0], 2);
+
+    // Free tile server - No API key required
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: 'Tiles &copy; Esri'
+    }).addTo(map);
+
+    // LOCATION COORDINATES AND STATS
+    const locations = [
+      {
+        lat: 40.3082,
+        lng: -74.6225,
+        description: "North Mill Road - West Windsor, NJ",
+        minutesCollected: 1420,
+        totalArea: "0.10 sq km",
+        status: "Active"
+      },
+      {
+        lat: 40.3100,
+        lng: -74.6100,
+        description: "West Windsor Community Park to High School South",
+        minutesCollected: 890,
+        totalArea: "0.01 sq km (1/50th of park area)",
+        status: "Active"
+      },
+      {
+        lat: 40.5241,
+        lng: -74.4564,
+        description: "Rutgers Ecological Preserve - Rutgers University",
+        minutesCollected: 3100,
+        totalArea: "1.50 sq km",
+        status: "Active"
+      },
+      {
+        lat: 13.0401,
+        lng: 80.1993,
+        description: "PSBB School Area - KK Nagar, Chennai, India",
+        minutesCollected: 2150,
+        totalArea: "0.45 sq km",
+        status: "Active"
+      }
+    ];
+
+    locations.forEach(loc => {
+      const dot = L.circleMarker([loc.lat, loc.lng], {
+        color: '#000000',
+        fillColor: loc.status === 'Active' ? '#0055ff' : '#777777',
+        fillOpacity: 0.8,
+        radius: 6,
+        weight: 1
+      }).addTo(map);
+
+      const boxContent = `
+        <div class="data-box">
+          <p><strong>Description:</strong> ${loc.description}</p>
+          <p><strong>Minutes of Data Collected:</strong> ${loc.minutesCollected}</p>
+          <p><strong>Total Area Collected:</strong> ${loc.totalArea}</p>
+          <p><strong>Status:</strong> ${loc.status}</p>
+          <hr style="border:0; border-top: 1px solid #ccc; margin: 6px 0;">
+          <p><em>Video is not available due to privacy reasons.</em></p>
+        </div>
+      `;
+
+      dot.bindPopup(boxContent);
+    });
+  </script>
+
+</body>
+</html>
