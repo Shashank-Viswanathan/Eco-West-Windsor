@@ -157,6 +157,31 @@
       font-family: 'Times New Roman', serif;
     }
 
+    /* ---- IMAGE FIGURE ---- */
+    .project-figure {
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+
+    .project-figure img {
+      width: 100%;
+      max-width: 900px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(40, 70, 30, 0.15);
+    }
+
+    .project-figure figcaption {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: #4a6a4a;
+      opacity: 0.7;
+      letter-spacing: 0.3px;
+      font-style: italic;
+    }
+
     .section-title {
       font-size: 1.3rem;
       font-weight: 600;
@@ -323,6 +348,36 @@
       margin-bottom: 0.3rem;
     }
 
+    .map-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 1.2rem;
+      padding: 0.8rem 1.8rem;
+      background: #2d5a2d;
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      border: 1px solid #3d6e3d;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .map-btn:hover {
+      background: #1f451f;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(50, 100, 40, 0.2);
+    }
+
+    .map-btn:active {
+      transform: translateY(0);
+    }
+
     .footer-note {
       margin-top: 3rem;
       padding-top: 1.5rem;
@@ -403,6 +458,10 @@
       .progress-box, .findings-box {
         padding: 1rem 1.2rem 1.2rem 1.2rem;
       }
+
+      .project-figure figcaption {
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
@@ -442,6 +501,11 @@
       <p>One of the key technical problems solved by us was double counting, when the same bee could go out of the field of view of the camera and come back at a later time, leading to the tracker seeing the insect as another bee. For this problem, we employed the use of the spatiotemporal probability model, which takes into account both the amount of time that has passed since the insect has gone out of view (&Delta;t), as well as the distance covered by it (&Delta;d). This model calculates the probability of whether the insect seen again is indeed the same one as before, thus helping the program separate the true re-appearance from the false one. By using the mathematical method in the computer vision algorithm, Global BeeWatch not only detects insects on videos but tries to provide more accurate measurements of their visit.</p>
     </div>
   </section>
+
+  <figure class="project-figure">
+    <img src="ex1.png" alt="Pollinator observation setup at West Windsor Community Park">
+    <figcaption>Capture in West Windsor Community Park</figcaption>
+  </figure>
 
   <section class="involvement-area">
     <div class="section-title">
@@ -486,6 +550,7 @@
           <li>Refinement of spatiotemporal probability model</li>
         </ul>
       </div>
+      <a href="data_map.html" class="map-btn">View Data Map</a>
     </div>
 
     <div class="findings-box">
