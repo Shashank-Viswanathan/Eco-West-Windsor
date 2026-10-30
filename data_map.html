@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Map Data Tracker</title>
+  <title>World Map Data Tracker · Belfast added</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
   <style>
     body {
@@ -72,7 +72,7 @@
       attribution: 'Tiles &copy; Esri'
     }).addTo(map);
 
-    // LOCATION COORDINATES AND STATS
+    // LOCATION COORDINATES AND STATS — Belfast, Ireland added (active, 0.62 sq km)
     const locations = [
       {
         lat: 40.3082,
@@ -104,6 +104,14 @@
         description: "PSBB School Area - KK Nagar, Chennai, India",
         minutesCollected: 2150,
         totalArea: "0.45 sq km",
+        status: "Active"
+      },
+      {
+        lat: 54.5973,
+        lng: -5.9301,
+        description: "Belfast - Northern Ireland, United Kingdom",
+        minutesCollected: 0,                // new location — no minutes recorded yet
+        totalArea: "0.62 sq km",
         status: "Active"
       }
     ];
