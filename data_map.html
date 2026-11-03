@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Map Data Tracker · Expanded locations</title>
+  <title>World Map Data Tracker · European flower reserves added</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
   <style>
     body {
@@ -72,7 +72,7 @@
       attribution: 'Tiles &copy; Esri'
     }).addTo(map);
 
-    // LOCATION COORDINATES AND STATS — expanded set with new sites
+    // LOCATION COORDINATES AND STATS — expanded set with European flower reserves
     const locations = [
       {
         lat: 40.3082,
@@ -114,7 +114,6 @@
         totalArea: "0.62 sq km",
         status: "Active"
       },
-      // --- new locations ---
       {
         lat: 50.4501,
         lng: 30.5234,
@@ -140,11 +139,36 @@
         status: "Active"
       },
       {
-        lat: -25.2744,   // representative point for an Australian wildlife preserve (near Alice Springs / central Australia)
+        lat: -25.2744,
         lng: 133.7751,
         description: "Wildlife Preserve - Australia (central region)",
         minutesCollected: 0,
         totalArea: "0.30 sq km",
+        status: "Active"
+      },
+      // --- European flower reserves ---
+      {
+        lat: 50.7172,          // Hallerbos forest, Belgium
+        lng: 4.2833,
+        description: "Hallerbos (Bluebell Forest) - Belgium [c. 600 ha]",
+        minutesCollected: 0,
+        totalArea: "0.02 sq km",
+        status: "Active"
+      },
+      {
+        lat: 48.1667,          // Daffodil Valley, Khust, Ukraine (Transcarpathia)
+        lng: 23.3000,
+        description: "Daffodil Valley (Narcissus Valley) - Khust, Ukraine [270 ha]",
+        minutesCollected: 0,
+        totalArea: "0.10 sq km",
+        status: "Active"
+      },
+      {
+        lat: 49.1813,          // Kamenný vrch / Koniklecová louka, Brno, Czech Republic
+        lng: 16.5551,
+        description: "Greater Pasque Flower Meadow (Kamenný vrch) - Brno, Czech Republic",
+        minutesCollected: 0,
+        totalArea: "0.01 sq km",
         status: "Active"
       }
     ];
