@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Map Data Tracker · Belfast added</title>
+  <title>World Map Data Tracker · Expanded locations</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
   <style>
     body {
@@ -72,7 +72,7 @@
       attribution: 'Tiles &copy; Esri'
     }).addTo(map);
 
-    // LOCATION COORDINATES AND STATS — Belfast, Ireland added (active, 0.62 sq km)
+    // LOCATION COORDINATES AND STATS — expanded set with new sites
     const locations = [
       {
         lat: 40.3082,
@@ -110,8 +110,41 @@
         lat: 54.5973,
         lng: -5.9301,
         description: "Belfast - Northern Ireland, United Kingdom",
-        minutesCollected: 0,                // new location — no minutes recorded yet
+        minutesCollected: 0,
         totalArea: "0.62 sq km",
+        status: "Active"
+      },
+      // --- new locations ---
+      {
+        lat: 50.4501,
+        lng: 30.5234,
+        description: "Kyiv - Ukraine",
+        minutesCollected: 0,
+        totalArea: "0.01 sq km",
+        status: "Active"
+      },
+      {
+        lat: 27.9506,
+        lng: -82.4572,
+        description: "Tampa - Florida, USA",
+        minutesCollected: 0,
+        totalArea: "0.03 sq km",
+        status: "Active"
+      },
+      {
+        lat: 32.8140,
+        lng: -96.9489,
+        description: "Irving - Texas, USA",
+        minutesCollected: 0,
+        totalArea: "0.02 sq km",
+        status: "Active"
+      },
+      {
+        lat: -25.2744,   // representative point for an Australian wildlife preserve (near Alice Springs / central Australia)
+        lng: 133.7751,
+        description: "Wildlife Preserve - Australia (central region)",
+        minutesCollected: 0,
+        totalArea: "0.30 sq km",
         status: "Active"
       }
     ];
