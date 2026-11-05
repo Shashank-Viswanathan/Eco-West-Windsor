@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Map Data Tracker · European flower reserves added</title>
+  <title>World Map Data Tracker · US reserves & universities added</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
   <style>
     body {
@@ -72,7 +72,7 @@
       attribution: 'Tiles &copy; Esri'
     }).addTo(map);
 
-    // LOCATION COORDINATES AND STATS — expanded set with European flower reserves
+    // LOCATION COORDINATES AND STATS — expanded set with US reserves & universities
     const locations = [
       {
         lat: 40.3082,
@@ -146,9 +146,8 @@
         totalArea: "0.30 sq km",
         status: "Active"
       },
-      // --- European flower reserves ---
       {
-        lat: 50.7172,          // Hallerbos forest, Belgium
+        lat: 50.7172,
         lng: 4.2833,
         description: "Hallerbos (Bluebell Forest) - Belgium [c. 600 ha]",
         minutesCollected: 0,
@@ -156,7 +155,7 @@
         status: "Active"
       },
       {
-        lat: 48.1667,          // Daffodil Valley, Khust, Ukraine (Transcarpathia)
+        lat: 48.1667,
         lng: 23.3000,
         description: "Daffodil Valley (Narcissus Valley) - Khust, Ukraine [270 ha]",
         minutesCollected: 0,
@@ -164,11 +163,61 @@
         status: "Active"
       },
       {
-        lat: 49.1813,          // Kamenný vrch / Koniklecová louka, Brno, Czech Republic
+        lat: 49.1813,
         lng: 16.5551,
         description: "Greater Pasque Flower Meadow (Kamenný vrch) - Brno, Czech Republic",
         minutesCollected: 0,
         totalArea: "0.01 sq km",
+        status: "Active"
+      },
+      // --- US nature reserves ---
+      {
+        lat: 44.5716,          // Yellowstone National Park
+        lng: -110.3550,
+        description: "Yellowstone National Park - Wyoming/Montana/Idaho, USA [c. 898,349 ha]",
+        minutesCollected: 0,
+        totalArea: "0.04 sq km",
+        status: "Active"
+      },
+      {
+        lat: 36.0650,          // Grand Canyon National Park (South Rim)
+        lng: -112.1176,
+        description: "Grand Canyon National Park - Arizona, USA [c. 493,270 ha]",
+        minutesCollected: 0,
+        totalArea: "0.03 sq km",
+        status: "Active"
+      },
+      {
+        lat: 35.6536,          // Great Smoky Mountains National Park
+        lng: -83.5469,
+        description: "Great Smoky Mountains National Park - Tennessee/North Carolina, USA [c. 211,204 ha]",
+        minutesCollected: 0,
+        totalArea: "0.02 sq km",
+        status: "Active"
+      },
+      // --- US universities ---
+      {
+        lat: 33.4242,          // Arizona State University (Tempe campus)
+        lng: -111.9281,
+        description: "Arizona State University (Tempe) - Tempe, AZ, USA [c. 95,000+ total enrollment]",
+        minutesCollected: 0,
+        totalArea: "0.01 sq km",
+        status: "Active"
+      },
+      {
+        lat: 30.6100,          // Texas A&M University (College Station)
+        lng: -96.3400,
+        description: "Texas A&M University - College Station, TX, USA [c. 71,000–72,000 on-campus]",
+        minutesCollected: 0,
+        totalArea: "0.02 sq km",
+        status: "Active"
+      },
+      {
+        lat: 28.5380,          // University of Central Florida (Orlando)
+        lng: -81.3780,
+        description: "University of Central Florida - Orlando, FL, USA [c. 68,000 students]",
+        minutesCollected: 0,
+        totalArea: "0.1 sq km",
         status: "Active"
       }
     ];
